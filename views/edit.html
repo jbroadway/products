@@ -1,0 +1,94 @@
+{! filemanager/util/browser !}
+
+<div class="form">
+<form method="post" id="{{ _form }}">
+
+<p>
+	{"Name"}:<br />
+	<input type="text" name="name" value="{{ name|quotes }}" size="50" />
+	<span class="notice" id="name-notice">{"Please enter a name."}</span>
+</p>
+
+<p>
+	{"Price"}:<br />
+	$<input type="text" name="price" value="{{ price|quotes }}" />
+	<span class="notice" id="price-notice">{"Please enter a price."}</span>
+</p>
+
+<p>
+	{"Photo"}:<br />
+	<input type="text" name="photo" id="photo" value="{{ photo|quotes }}" size="40" />
+	<input type="submit" id="photo-browse" value="{"Choose"}" />
+	<span class="notice" id="photo-notice">{"Please enter a photo."}</span>
+</p>
+
+<p>
+	{"Category"}:<br />
+	<select name="category">
+		<option value="">- select -</option>
+{% for _key in _categories %}
+		<option value="{{_key|quotes}}"{% if _key == $data->category %} selected{% end %}>{{_key}}</option>
+{% end %}
+	</select>
+	<span class="notice" id="category-notice">{"Please choose a category."}</span>
+</p>
+
+<p>
+	{"Description"}:<br />
+	<textarea name="description" cols="60" rows="4">{{ description }}</textarea>
+	<span class="notice" id="description-notice">{"Please enter a description."}</span>
+</p>
+
+<p>
+	{"Digital download"}:<br />
+	<input type="text" name="download" id="download" value="{{ download|quotes }}" size="40" />
+	<input type="submit" id="download-browse" value="{"Choose"}" />
+	<span class="notice" id="download-notice">{"Please enter a download."}</span>
+</p>
+
+<p>
+	{"Quantity"}:<br />
+	<input type="text" name="quantity" value="{{ quantity|quotes }}" size="10" />
+	<span class="notice" id="quantity-notice">{"Please enter a quantity."}</span>
+</p>
+
+<p>
+	{"Taxes"}: <span class="notice" id="taxes-notice">{"Please choose a tax."}</span>
+{% for _key in _taxes %}
+	<br />
+	<label>
+		<input type="checkbox" name="taxes[]" value="{{_key|quotes}}"
+		{% if in_array ($data->_key, $data->taxes) %} checked{% end %}
+		/> {{_key}}
+	</label>
+{% end %}
+</p>
+
+<p>
+	<input type="submit" value="{"Save Product"}" />&nbsp;
+	<a href="javascript:history.go(-1)" onclick="return confirm ('{"Are you sure you want to cancel and lose any changes?"}')">{"Cancel"}</a>
+</p>
+
+</form>
+</div>
+
+<script>
+$(function () {
+	$('#photo-browse').click (function (e) {
+		e.preventDefault ();
+		$.filebrowser ({
+			allowed: ['jpg', 'jpeg', 'png', 'gif'],
+			set_value: '#photo',
+			title: "{"Choose an image"}",
+			thumbs: true
+		});
+	});
+
+	$('#download-browse').click (function (e) {
+		e.preventDefault ();
+		$.filebrowser ({
+			set_value: '#download'
+		});
+	});
+});
+</script>

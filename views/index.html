@@ -1,0 +1,33 @@
+<div class="products">
+{% foreach products as product %}
+
+	{% if product->category != $data->category %}
+		<h2>{{product->category}}</h2>
+		{{category=$data->product->category}}
+	{% end %}
+
+	<div class="product">
+		<p>
+			<strong class="product-name">{{product->name}} - ${{product->price|products\Filter::money}}</strong><br />
+			{% if product->description != '' %}
+				<span class="product-description">{{product->description}}</span>
+			{% end %}
+			<span class="product-buy-button">
+				{! stripe/button?description=[product->name]&amount=[product->price]&button=Buy !}
+			</span>
+		</p>
+	</div>
+
+{% end %}
+</div>
+
+<style>
+.product {
+	clear: both;
+}
+
+.product-buy-button {
+	display: inline-block;
+	float: right;
+}
+</style>

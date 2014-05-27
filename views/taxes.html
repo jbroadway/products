@@ -1,0 +1,27 @@
+<p>
+	<a href="/products/admin">&laquo; {"Back"}</a>
+	&nbsp;|&nbsp;
+	<a href="/products/taxes/add">{"Add Tax"}</a>
+</p>
+
+<p>
+<table width="100%">
+	<tr>
+		<th width="54%">{" Name "}</th>
+		<th width="30%" style="text-align: center">{" Percent "}</th>
+		<th width="16%">&nbsp;</th>
+	</tr>
+{% foreach items %}
+	<tr>
+		<td>{{ loop_value->name }}</td>
+		<td style="text-align: center">{{ loop_value->percent }}%</td>
+		<td style="text-align: right">
+			<a	href="/products/taxes/edit?id={{ loop_value->name }}">{"Edit"}</a> |
+			<a	href="/products/taxes/delete"
+				data-id="{{ loop_value->name }}"
+				onclick="return $.confirm_and_post (this, '{"Are you sure you want to delete this tax?"}')">{"Delete"}</a>
+		</td>
+	</tr>
+{% end %}
+</table>
+</p>
