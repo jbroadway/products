@@ -2,6 +2,10 @@
 
 <form method="post" id="{{_form}}">
 
+<p>{"Email order notifications to"}:<br />
+<input type="email" name="notify" size="30" value="{{ notify|quotes }}" />
+</p>
+
 <p>{"Products page title"}:<br />
 <input type="text" name="title" size="40" value="{{ title|quotes }}" />
 <span class="notice" id="title-notice">{"You must enter an products page title."}</span></p>
@@ -20,6 +24,16 @@
 	<option value="{{loop_index}}"{% if payment_handler == $data->loop_index %} selected{% end %}>{{loop_value|__}}</option>
 	{% end %}
 </select>
+</p>
+
+<p>
+	{"Use the web server's built-in file sending for faster downloads."}<br />
+	<em>{"Note: Requires the chosen web server extension to be enabled."}</em><br />
+	<select name="xsendfile">
+		<option value=""{% if xsendfile == '' %} selected{% end %}>{"Default (PHP)"}</option>
+		<option value="lighttpd"{% if xsendfile == 'lighttpd' %} selected{% end %}>Apache mod_sendfile / Lighttpd</option>
+		<option value="nginx"{% if xsendfile == 'nginx' %} selected{% end %}>Nginx XSendFile</option>
+	</select>
 </p>
 
 <p>

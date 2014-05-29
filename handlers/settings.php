@@ -18,7 +18,9 @@ $form->data = array (
 	'layouts' => admin_get_layouts (),
 	'layout' => $appconf['Products']['layout'],
 	'payment_handler' => $appconf['Products']['payment_handler'],
-	'payment_handlers' => products\App::payment_handlers ()
+	'payment_handlers' => products\App::payment_handlers (),
+	'xsendfile' => $appconf['Products']['xsendfile'],
+	'notify' => $appconf['Products']['notify']
 );
 
 echo $form->handle (function ($form) {
@@ -26,7 +28,9 @@ echo $form->handle (function ($form) {
 		'Products' => array (
 			'title' => $_POST['title'],
 			'layout' => $_POST['layout'],
-			'payment_handler' => $_POST['payment_handler']
+			'payment_handler' => $_POST['payment_handler'],
+			'xsendfile' => $_POST['xsendfile'],
+			'notify' => $_POST['notify']
 		)
 	));
 

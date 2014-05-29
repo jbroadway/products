@@ -14,6 +14,16 @@ layout = default
 
 payment_handler = ""
 
+; Whether to use the web server's built-in file sending
+; for faster downloads. Requires the appropriate web
+; server extension to be enabled.
+
+xsendfile = ""
+
+; Email address to notify when new orders are placed.
+
+notify = ""
+
 ; Whether to include this app in the list of pages
 ; available to the Tools > Navigation tree.
 
