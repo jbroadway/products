@@ -1,0 +1,33 @@
+{% if action == 'completed' %}
+<p id="order-confirmed">{"Your order has been confirmed."}</p>
+
+<p id="order-number"><strong>{"Order Number"}: {{order->id|str_pad (%s, 3, '0', STR_PAD_LEFT)}}-{{product->id}}</strong></p>
+{% end %}
+
+{% if product->download != '' %}
+<p id="product-download">
+	<a href="/products/order/{{order->id}}/{{product->id}}/download/{{product->download|basename|urlencode}}">{"Click here to download the file"} <em>"{{product->download|basename}}"</em></a>
+</p>
+{% end %}
+
+<p>
+<table id="order-table" style="width: 100%">
+	<tr>
+		<th>{"Description"}</th>
+		<th style="text-align: right">{"Amount"}</th>
+	</tr>
+	<tr>
+		<td>{{product->name}}</th>
+		<td style="text-align: right">${{product->price|products\Filter::money}}</td>
+	</tr>
+{% foreach taxes as tax, percent %}
+	<tr>
+		<th style="text-align: right">{{tax}}</th>
+		<td style="text-align: right">${{products\Tax::calculate ($data->product->price, $data->percent)|products\Filter::money}}</td>
+{% end %}
+	<tr>
+		<th style="text-align: right">{"Total"}</th>
+		<td style="text-align: right">${{order->amount|products\Filter::money}}</td>
+	</tr>
+</table>
+</p>

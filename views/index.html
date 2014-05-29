@@ -2,32 +2,30 @@
 {% foreach products as product %}
 
 	{% if product->category != $data->category %}
-		<h2>{{product->category}}</h2>
+		{% if category != '' %}
+	</div>
+		{% end %}
+	<h2>{{product->category}}</h2>
+	<div class="product-list">
 		{{category=$data->product->category}}
 	{% end %}
 
-	<div class="product">
-		<p>
-			<strong class="product-name">{{product->name}} - ${{product->price|products\Filter::money}}</strong><br />
+		<div class="product">
+			<h3 class="product-header">
+				<span class="product-name">{{product->name}}</span>
+				<span class="product-price">${{product->price|products\Filter::money}}</span>
+			</h3>
+			{! stripe/button
+				?description=[product->payment_description]
+				&amount=[product->total]
+				&button=Buy
+				&redirect=/products/order/%d/[product->id]/completed
+			!}
 			{% if product->description != '' %}
 				<span class="product-description">{{product->description}}</span>
 			{% end %}
-			<span class="product-buy-button">
-				{! stripe/button?description=[product->name]&amount=[product->price]&button=Buy !}
-			</span>
-		</p>
-	</div>
+		</div>
 
 {% end %}
+	</div>
 </div>
-
-<style>
-.product {
-	clear: both;
-}
-
-.product-buy-button {
-	display: inline-block;
-	float: right;
-}
-</style>
