@@ -7,7 +7,8 @@ create table #prefix#products (
 	description text not null default '',
 	download char(255) not null default '',
 	quantity int not null default 0,
-	taxes char(255) not null default '[]'
+	taxes char(255) not null default '[]',
+	address tinyint not null default 0
 );
 
 create index #prefix#products_name on #prefix#products (name);

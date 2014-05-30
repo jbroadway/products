@@ -15,6 +15,7 @@ foreach ($products as $k => $p) {
 		$products[$k]->total += products\Tax::calculate ($p->price, $percent);
 	}
 	$products[$k]->payment_description = $p->name . ' (#' . str_pad ($p->id, 3, '0', STR_PAD_LEFT) . ')';
+	$products[$k]->address = $p->address ? 'Yes' : 'No';
 }
 
 echo $tpl->render (

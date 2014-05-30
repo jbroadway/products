@@ -24,6 +24,7 @@ echo $form->handle (function ($form) use ($product) {
 	$product->download = $_POST['download'];
 	$product->quantity = $_POST['quantity'];
 	$product->taxes = is_array ($_POST['taxes']) ? json_encode ($_POST['taxes']) : '[]';
+	$product->address = $_POST['address'];
 	$product->put ();
 
 	if ($product->error) {

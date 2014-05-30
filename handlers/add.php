@@ -25,7 +25,8 @@ echo $form->handle (function ($form) {
 		'description' => $_POST['description'], 
 		'download' => $_POST['download'], 
 		'quantity' => $_POST['quantity'], 
-		'taxes' => is_array ($_POST['taxes']) ? json_encode ($_POST['taxes']) : '[]'
+		'taxes' => is_array ($_POST['taxes']) ? json_encode ($_POST['taxes']) : '[]',
+		'address' => $_POST['address']
 	));
 	$product->put ();
 

@@ -20,6 +20,7 @@
 				&amount=[product->total]
 				&button=Buy
 				&redirect=/products/order/%d/[product->id]/completed
+				&address=[product->address]
 			!}
 			{% if product->description != '' %}
 				<span class="product-description">{{product->description}}</span>
