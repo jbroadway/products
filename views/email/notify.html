@@ -1,0 +1,39 @@
+A new order has been placed!
+
+Order Number: {{order->id|str_pad (%s, 3, '0', STR_PAD_LEFT)}}-{{product->id}} 
+
+{% if product->download != '' %}
+Download link for "{{product->download|basename}}"
+
+    http://{{$_SERVER.HTTP_HOST}}/products/order/{{order->id}}/{{product->id}}/download/{{product->download|basename|urlencode}} 
+
+{% end %}
+
+Order summary:
+
+{{product->name}}: ${{product->price|products\Filter::money}} 
+{% foreach taxes as tax, percent %}
+{{tax}}: ${{products\Tax::calculate ($data->product->price, $data->percent)|products\Filter::money}} 
+{% end %}
+Total: ${{order->amount|products\Filter::money}} 
+
+Contact info:
+
+{{order->email}} 
+
+{% if order->shipping_name != '' %}
+Ship to:
+    {{order->shipping_name}} 
+    {{order->shipping_address}} 
+    {{order->shipping_city}}, {{order->shipping_state}} 
+    {{order->shipping_country}} {{order->shipping_zip}}
+{% end %}
+
+
+{% if order->billing_name != '' %}
+Billed to:
+    {{order->billing_name}} 
+    {{order->billing_address}} 
+    {{order->billing_city}}, {{order->billing_state}} 
+    {{order->billing_country}} {{order->billing_zip}}
+{% end %}

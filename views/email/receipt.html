@@ -1,0 +1,25 @@
+Thank you for your order!
+
+Order Number: {{order->id|str_pad (%s, 3, '0', STR_PAD_LEFT)}}-{{product->id}} 
+
+{% if product->download != '' %}
+Click the following link to download the file "{{product->download|basename}}"
+
+    http://{{$_SERVER.HTTP_HOST}}/products/order/{{order->id}}/{{product->id}}/download/{{product->download|basename|urlencode}} 
+
+{% end %}
+
+Order summary:
+
+{{product->name}}: ${{product->price|products\Filter::money}} 
+{% foreach taxes as tax, percent %}
+{{tax}}: ${{products\Tax::calculate ($data->product->price, $data->percent)|products\Filter::money}} 
+{% end %}
+Total: ${{order->amount|products\Filter::money}} 
+
+Thanks again for your order, and if you have any questions just
+reply to let us know!
+
+Regards,
+
+{{ conf('General', 'site_name') }}

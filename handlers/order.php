@@ -39,15 +39,46 @@ if (! preg_match ('/\(\#' . str_pad ($product->id, 3, '0', STR_PAD_LEFT) . '\)/'
 	return;
 }
 
+$taxes = products\Tax::taxes (json_decode ($product->taxes));
 
 if ($this->params[2] === 'completed') {
 	$page->title = __ ('Order confirmed');
 
+	// send email receipt
 	try {
 		Mailer::send (array (
-			
+			'to' => array ($order->email),
+			'subject' => 'Receipt for order #' . str_pad ($order->id, 3, '0', STR_PAD_LEFT) . '-' . $product->id,
+			'text' => $tpl->render (
+				'products/email/receipt',
+				array (
+					'product' => $product->orig (),
+					'order' => $order->orig (),
+					'taxes' => $taxes
+				)
+			)
 		));
 	} catch (Exception $e) {
+	}
+
+	// notify admin of sale
+	$notify = Appconf::products ('Products', 'notify');
+	if ($notify && ! empty ($notify)) {
+		try {
+			Mailer::send (array (
+				'to' => array ($notify),
+				'subject' => 'New order received #' . str_pad ($order->id, 3, '0', STR_PAD_LEFT) . '-' . $product->id,
+				'text' => $tpl->render (
+					'products/email/notify',
+					array (
+						'product' => $product->orig (),
+						'order' => $order->orig (),
+						'taxes' => $taxes
+					)
+				)
+			));
+		} catch (Exception $e) {
+		}
 	}
 } elseif ($this->params[2] === 'download') {
 	$page->layout = false;
@@ -73,7 +104,7 @@ echo $tpl->render (
 		'product' => $product->orig (),
 		'order' => $order->orig (),
 		'action' => $this->params[2],
-		'taxes' => products\Tax::taxes (json_decode ($product->taxes))
+		'taxes' => $taxes
 	)
 );
 
