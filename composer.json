@@ -1,0 +1,21 @@
+{
+    "name": "elefant/app-products",
+    "type": "elefant-app",
+    "description": "A reusable, embeddable products component for the Elefant CMS",
+    "keywords": ["products", "sales", "elefant", "cms", "app"],
+    "license": "MIT",
+    "version": "1.0.0",
+	"authors": [
+		{
+			"name": "Johnny Broadway",
+			"email": "johnny@johnnybroadway.com",
+			"homepage": "http://www.johnnybroadway.com/"
+		}
+	],
+    "repositories": [
+        {"type": "git", "url": "http://github.com/jbroadway/elefant_installer"}
+    ],
+    "require": {
+        "elefant/app-installer": "*"
+    }
+}
