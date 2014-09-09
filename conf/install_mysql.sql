@@ -9,7 +9,7 @@ create table #prefix#products (
 	quantity int not null default 0, 
 	taxes char(255) not null default '[]',
 	address tinyint not null default 0,
-	index (name)
+	index (name),
 	index (category, name)
 );
 
