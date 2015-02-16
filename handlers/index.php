@@ -3,6 +3,7 @@
 // Verify that they're on an SSL connection
 $this->force_https ();
 
+$page->id = 'products';
 $page->title = Appconf::products ('Products', 'title');
 $page->layout = Appconf::products ('Products', 'layout');
 
