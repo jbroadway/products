@@ -91,3 +91,7 @@
 .product-details {
 	padding-top: 10px;
 }
+.products-item-out-of-stock {
+	color: #a00;
+	font-weight: bold;
+}

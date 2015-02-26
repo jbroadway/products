@@ -1,4 +1,28 @@
+<p>
+	<a href="/products">&laquo; {"All Products"}</a>
+</p>
 
+<div class="products-summary e-row-equal">
+	<div class="e-col-40 e-no-padding">
+		<div class="products-thumbnail-wrapper">
+			<div class="products-thumbnail"
+				{% if photo != '' %}
+					style="background-image: url('/{{photo|Image::resize (%s, 600, 450, 'cover', 'ext')}}')"
+				{% else %}
+					style="background-image: url(/apps/products/css/default.jpg)"
+				{% end %}
+			></div>
+		</div>
+	</div>
+	<div class="products-summary-info e-col-60 e-no-padding">
+
+		<div class="products-summary-info-text">
+			<p class="products-item-price">{"Price"}: ${{price|products\Filter::money}}</p>
+			<p class="products-item-description">{{description}}</p>
+
+		{% if quantity == 0 %}
+			<p class="products-item-out-of-stock">{"Out of stock"}</p>
+		{% else %}
 			{! stripe/button
 				?description=[payment_description]
 				&amount=[total]
@@ -6,3 +30,10 @@
 				&redirect=/products/order/%d/[id]/completed
 				&address=[address]
 			!}
+		{% end %}
+		</div>
+	</div>
+</div>
+
+<div class="product-details">{{ details|none }}</div>
+<br />
