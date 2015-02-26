@@ -1,7 +1,7 @@
 <?php
 
 // Verify that they're on an SSL connection
-//$this->force_https ();
+$this->force_https ();
 
 if (! count ($this->params)) {
 	$this->redirect ('/products');
