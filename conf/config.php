@@ -34,6 +34,7 @@ include_in_nav = On
 handler = products/admin
 name = Products
 install = products/install
-version = 0.8.0
+upgrade = products/upgrade
+version = 0.9.0
 
 ; */ ?>

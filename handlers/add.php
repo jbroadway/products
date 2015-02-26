@@ -10,7 +10,7 @@ $form = new Form ('post', $this);
 $form->data = array (
 	'_categories' => products\Category::query ()->order ('name', 'asc')->fetch_field ('name'),
 	'_taxes' => products\Tax::query ()->order ('name', 'asc')->fetch_field ('name'),
-	'quantity' => '0',
+	'quantity' => '-1',
 	'taxes' => array ()
 );
 
@@ -26,7 +26,8 @@ echo $form->handle (function ($form) {
 		'download' => $_POST['download'], 
 		'quantity' => $_POST['quantity'], 
 		'taxes' => is_array ($_POST['taxes']) ? json_encode ($_POST['taxes']) : '[]',
-		'address' => $_POST['address']
+		'address' => $_POST['address'],
+		'details' => $_POST['details']
 	));
 	$product->put ();
 

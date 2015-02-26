@@ -14,6 +14,7 @@ namespace products;
  * - download
  * - quantity
  * - taxes
+ * - details
  */
 class Product extends \Model {
 	public $table = '#prefix#products';

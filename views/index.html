@@ -6,25 +6,29 @@
 	</div>
 		{% end %}
 	<h2>{{product->category}}</h2>
-	<div class="product-list">
+	<div class="products-list e-row-variable">
 		{{category=$data->product->category}}
 	{% end %}
 
-		<div class="product">
-			<h3 class="product-header">
-				<span class="product-name">{{product->name}}</span>
-				<span class="product-price">${{product->price|products\Filter::money}}</span>
-			</h3>
-			{! stripe/button
-				?description=[product->payment_description]
-				&amount=[product->total]
-				&button=Buy
-				&redirect=/products/order/%d/[product->id]/completed
-				&address=[product->address]
-			!}
-			{% if product->description != '' %}
-				<span class="product-description">{{product->description}}</span>
-			{% end %}
+		<div class="e-col-33 e-no-padding">
+			<div class="products-item">
+				<div class="products-thumbnail-wrapper">
+					<a href="/products/details/{{ product->id }}/{{ product->name|URLify::filter }}">
+						<div class="products-thumbnail"
+							{% if product->photo != '' %}
+								style="background-image: url('/{{product->photo|Image::resize (%s, 400, 300, 'cover', 'ext')}}')"
+							{% else %}
+								style="background-image: url(/apps/products/css/default.jpg)"
+							{% end %}
+						></div>
+					</a>
+				</div>
+				<div class="products-item-info">
+					<h4><a href="/products/details/{{ product->id }}/{{ product->name|URLify::filter }}">{{product->name}}</a></h4>
+					<p class="products-item-price">${{product->price|products\Filter::money}}</p>
+					<a href="/products/details/{{ product->id }}/{{ product->name|URLify::filter }}" class="products-item-link">{"Details"}</a>
+				</div>
+			</div>
 		</div>
 
 {% end %}

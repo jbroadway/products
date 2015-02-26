@@ -24,6 +24,13 @@ echo $form->handle (function ($form) {
 	// Save a version of the category 
 	Versions::add ($cat);
 
+	// Move products to new category
+	\DB::execute (
+		'update #prefix#products set category = ? where category = ?',
+		$_POST['name'],
+		$_GET['id']
+	);
+
 	// Notify the user and redirect on success
 	$form->controller->add_notification (__ ('Category saved.'));
 	$form->controller->redirect ('/products/categories');

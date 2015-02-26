@@ -1,11 +1,10 @@
 <?php
 
-// Verify that they're on an SSL connection
-$this->force_https ();
-
 $page->id = 'products';
 $page->title = Appconf::products ('Products', 'title');
 $page->layout = Appconf::products ('Products', 'layout');
+$this->run ('admin/util/minimal-grid');
+$page->add_style ('/apps/products/css/products.css');
 
 $products = products\Product::query ()
 	->order ('category', 'asc')

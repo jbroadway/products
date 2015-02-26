@@ -11,18 +11,20 @@
 <p>
 <table width="100%">
 	<tr>
-		<th width="31%">{" Name "}</th>
-		<th width="14%">{" Price "}</th>
-		<th width="25%">{" Category "}</th>
-		<th width="14%">{" Quantity "}</th>
-		<th width="16%">&nbsp;</th>
+		<th width="34%">{" Name "}</th>
+		<th width="22%">{" Category "}</th>
+		<th width="10%" style="text-align: right">{" Price "}</th>
+		<th width="10%" style="text-align: right">{" Available "}</th>
+		<th width="12%">{" Taxes "}</th>
+		<th width="12%">&nbsp;</th>
 	</tr>
 {% foreach items %}
 	<tr>
 		<td>{{ loop_value->name }}</td>
-		<td style="text-align: right">${{ loop_value->price|products\Filter::money }}</td>
 		<td>{{ loop_value->category }}</td>
-		<td style="text-align: right">{{ loop_value->quantity }}</td>
+		<td style="text-align: right">${{ loop_value->price|products\Filter::money }}</td>
+		<td style="text-align: right">{{ loop_value->quantity|products\Filter::quantity }}</td>
+		<td>{{ loop_value->taxes|products\Filter::taxes }}</td>
 		<td style="text-align: right">
 			<a	href="/products/edit?id={{ loop_value->id }}">{"Edit"}</a> |
 			<a	href="/products/delete"

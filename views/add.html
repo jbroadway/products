@@ -1,4 +1,5 @@
 {! filemanager/util/browser !}
+{! admin/util/wysiwyg !}
 
 <div class="form">
 <form method="post" id="{{ _form }}">
@@ -9,17 +10,23 @@
 	<span class="notice" id="name-notice">{"Please enter a name."}</span>
 </p>
 
+<div id="thumbnail-div">
+	{"Photo"}:<br />
+	<div class="thumbnail-wrapper">
+		<div class="thumbnail" id="thumbnail-preview"
+		{% if photo !== '' %}
+			style="background-image: url('{{photo}}')"
+		{% end %}
+		></div>
+	</div>
+	<input type="hidden" name="photo" id="thumbnail" size="40" value="{{ photo|quotes }}" />
+	<input type="submit" id="thumbnail-browse" value="{"Choose"}" />
+</div>
+
 <p>
 	{"Price"}:<br />
 	$<input type="text" name="price" value="{{ price|quotes }}" />
 	<span class="notice" id="price-notice">{"Please enter a price."}</span>
-</p>
-
-<p>
-	{"Photo"}:<br />
-	<input type="text" name="photo" id="photo" value="{{ photo|quotes }}" size="40" />
-	<input type="submit" id="photo-browse" value="{"Choose"}" />
-	<span class="notice" id="photo-notice">{"Please enter a photo."}</span>
 </p>
 
 <p>
@@ -39,6 +46,9 @@
 	<span class="notice" id="description-notice">{"Please enter a description."}</span>
 </p>
 
+<p>{"Details"}:<br />
+<textarea name="details" id="webpage-body" cols="90" rows="28">{{ details }}</textarea></p>
+
 <p>
 	{"Digital download"}:<br />
 	<input type="text" name="download" id="download" value="{{ download|quotes }}" size="40" />
@@ -46,14 +56,11 @@
 	<span class="notice" id="download-notice">{"Please enter a download."}</span>
 </p>
 
-<!--
 <p>
-	{"Quantity"}:<br />
+	{"Quantity (-1 for unlimited)"}:<br />
 	<input type="text" name="quantity" value="{{ quantity|quotes }}" size="10" />
 	<span class="notice" id="quantity-notice">{"Please enter a quantity."}</span>
 </p>
--->
-<input type="hidden" name="quantity" value="{{ quantity|quotes }}" />
 
 <p>
 	{"Requires mailing address"}:<br />
@@ -83,15 +90,51 @@
 </form>
 </div>
 
+<style>
+#{{_form}} {
+	position: relative;
+}
+#thumbnail-div {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 150px;
+}
+.thumbnail-wrapper {
+	background-color: #ccc;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	padding-bottom: 66%;
+	width: 100%;
+	height: 0;
+	margin-bottom: 5px;
+}
+.thumbnail,
+.thumbnail-preview {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url(/apps/blog/css/default.jpg);
+	background-position: 50% 50%;
+	background-size: cover;
+}
+</style>
+
 <script>
 $(function () {
-	$('#photo-browse').click (function (e) {
+	$('#thumbnail-browse').click (function (e) {
 		e.preventDefault ();
 		$.filebrowser ({
 			allowed: ['jpg', 'jpeg', 'png', 'gif'],
-			set_value: '#photo',
+			set_value: '#thumbnail',
 			title: "{"Choose an image"}",
-			thumbs: true
+			thumbs: true,
+			callback: function (file) {
+				$('#thumbnail-preview').css ('background-image', 'url(\'' + encodeURI (file) + '\')');
+			}
 		});
 	});
 
