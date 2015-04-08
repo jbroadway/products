@@ -23,6 +23,8 @@
 		{% if quantity == 0 %}
 			<p class="products-item-out-of-stock">{"Out of stock"}</p>
 		{% else %}
+			<p><button id="cart-add" data-id="{{id}}" data-label="{{name}}" data-price="{{price}}">{"Add to cart"}</button></p>
+		<!--
 			{! stripe/button
 				?description=[payment_description]
 				&amount=[total]
@@ -30,6 +32,7 @@
 				&redirect=/products/order/%d/[id]/completed
 				&address=[address]
 			!}
+		-->
 		{% end %}
 		</div>
 	</div>
@@ -37,3 +40,9 @@
 
 <div class="product-details">{{ details|none }}</div>
 <br />
+
+<script>
+cart.init ({
+	button_add: '#cart-add'
+});
+</script>
