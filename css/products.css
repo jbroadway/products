@@ -96,6 +96,10 @@
 	font-weight: bold;
 }
 
+.products-nav {
+	margin-bottom: 1em;
+}
+
 .cart-contents-table {
 	width: 100%;
 }

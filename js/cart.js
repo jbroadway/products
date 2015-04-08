@@ -121,6 +121,7 @@ var cart = (function ($, Handlebars, accounting) {
 			qty = $btn.data ('quantity') || 1;
 		
 		self.add (id, label, url, price, qty);
+		location.href = '/products/cart';
 	};
 	
 	/**
