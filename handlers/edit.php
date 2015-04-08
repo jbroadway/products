@@ -9,10 +9,11 @@ $form = new Form ('post', $this);
 
 $product = new products\Product ($_GET['id']);
 $form->data = $product->orig ();
-$form->data->price = $form->data->price / 100;
+$form->data->price = bcdiv ($form->data->price, 100, 2);
 $form->data->taxes = json_decode ($form->data->taxes);
 $form->data->_categories = products\Category::query ()->order ('name', 'asc')->fetch_field ('name');
 $form->data->_taxes = products\Tax::query ()->order ('name', 'asc')->fetch_field ('name');
+$form->data->shipping = bcdiv ($form->data->shipping, 100, 2);
 
 echo $form->handle (function ($form) use ($product) {
 	// Update the product 
@@ -26,6 +27,7 @@ echo $form->handle (function ($form) use ($product) {
 	$product->taxes = is_array ($_POST['taxes']) ? json_encode ($_POST['taxes']) : '[]';
 	$product->address = $_POST['address'];
 	$product->details = $_POST['details'];
+	$products->shipping = $_POST['shipping'] * 100;
 	$product->put ();
 
 	if ($product->error) {

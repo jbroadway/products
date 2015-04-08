@@ -25,8 +25,8 @@
 
 <p>
 	{"Price"}:<br />
-	$<input type="text" name="price" value="{{ price|quotes }}" />
-	<span class="notice" id="price-notice">{"Please enter a price."}</span>
+	$ <input type="text" name="price" value="{{ price|quotes }}" placeholder="ex: 19.00" />
+	<span class="notice" id="price-notice">{"Please enter a valid price."}</span>
 </p>
 
 <p>
@@ -68,6 +68,12 @@
 		<option value="0"{% if address == 0 %} selected{% end %}>{"No"}</option>
 		<option value="1"{% if address == 1 %} selected{% end %}>{"Yes"}</option>
 	</select>
+</p>
+
+<p>
+	{"Shipping"}:<br />
+	$ <input type="text" name="shipping" value="{{ shipping|quotes }}" placeholder="ex: 5.00" />
+	<span class="notice" id="shipping-notice">{"Please enter a valid shipping amount."}</span>
 </p>
 
 <p>

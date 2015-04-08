@@ -20,7 +20,9 @@ $form->data = array (
 	'payment_handler' => $appconf['Products']['payment_handler'],
 	'payment_handlers' => products\App::payment_handlers (),
 	'xsendfile' => $appconf['Products']['xsendfile'],
-	'notify' => $appconf['Products']['notify']
+	'notify' => $appconf['Products']['notify'],
+	'max_shipping' => bcdiv ($appconf['Products']['max_shipping'], 100, 2),
+	'shipping_free_over' => bcdiv ($appconf['Products']['shipping_free_over'], 100, 2)
 );
 
 echo $form->handle (function ($form) {
@@ -30,7 +32,9 @@ echo $form->handle (function ($form) {
 			'layout' => $_POST['layout'],
 			'payment_handler' => $_POST['payment_handler'],
 			'xsendfile' => $_POST['xsendfile'],
-			'notify' => $_POST['notify']
+			'notify' => $_POST['notify'],
+			'max_shipping' => $_POST['max_shipping'] * 100,
+			'shipping_free_over' => $_POST['shipping_free_over'] * 100
 		)
 	));
 

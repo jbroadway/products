@@ -1,14 +1,11 @@
 ; <?php /*
 
-[name]
-not empty = 1
-
-[price]
-not empty = 1
+[max_shipping]
+skip_if_empty = 1
 type = numeric
 contains = "."
 
-[shipping]
+[shipping_free_over]
 skip_if_empty = 1
 type = numeric
 contains = "."

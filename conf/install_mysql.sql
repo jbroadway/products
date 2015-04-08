@@ -10,6 +10,7 @@ create table #prefix#products (
 	taxes char(255) not null default '[]',
 	address tinyint not null default 0,
 	details text,
+	shipping int not null default 0,
 	index (name),
 	index (category, name)
 );

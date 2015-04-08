@@ -29,12 +29,20 @@ notify = ""
 
 include_in_nav = On
 
+; Maximum amount to charge for shipping.
+
+max_shipping = Off
+
+; Amount after which shipping is free.
+
+shipping_free_over = Off
+
 [Admin]
 
 handler = products/admin
 name = Products
 install = products/install
 upgrade = products/upgrade
-version = 0.9.0
+version = 0.9.2
 
 ; */ ?>

@@ -100,6 +100,10 @@
 	margin-bottom: 1em;
 }
 
+.products h2 {
+	clear: both;
+}
+
 .cart-contents-table {
 	width: 100%;
 }

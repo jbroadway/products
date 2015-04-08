@@ -9,7 +9,8 @@ create table #prefix#products (
 	quantity int not null default 0,
 	taxes char(255) not null default '[]',
 	address tinyint not null default 0,
-	details text
+	details text,
+	shipping int not null default 0
 );
 
 create index #prefix#products_name on #prefix#products (name);
