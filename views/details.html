@@ -23,7 +23,11 @@
 		{% if quantity == 0 %}
 			<p class="products-item-out-of-stock">{"Out of stock"}</p>
 		{% else %}
-			<p><button id="cart-add" data-id="{{id}}" data-label="{{name}}" data-price="{{price}}">{"Add to cart"}</button></p>
+			<p><button	id="cart-add"
+						data-id="{{id}}"
+						data-url="/products/details/{{id}}/{{name|URLify::filter}}"
+						data-label="{{name}}"
+						data-price="{{price}}">{"Add to cart"}</button></p>
 		<!--
 			{! stripe/button
 				?description=[payment_description]

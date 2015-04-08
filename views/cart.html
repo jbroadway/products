@@ -1,7 +1,41 @@
+<script id="tpl-cart" type="text/html">
+<table class="cart-contents-table">
+	<tr>
+		<th class="cart-col-label">{"Item"}</th>
+		<th class="cart-col-quantity">{"Quantity"}</th>
+		<th class="cart-col-price">{"Price"}</th>
+	</tr>
+\{{#each contents}}
+	<tr>
+		<td class="cart-col-label"><a href="\{{url}}">\{{label}}</a></td>
+		<td class="cart-col-quantity"><input type="text" name="qty" class="cart-input-qty" data-id="\{{id}}" value="\{{qty}}" size="3" /></td>
+		<td class="cart-col-price">\{{money price}}</td>
+	</tr>
+\{{/each}}
+</table>
+
+<p class="cart-subtotal">
+	<strong class="cart-subtotal-text">{"Subtotal"}</strong>
+	<span class="cart-subtotal-price">\{{format_subtotal}}</span>
+</p>
+</script>
+
 <div id="cart-contents"></div>
+
+<p class="cart-actions">
+	<button id="cart-update">{"Update Cart"}</button>
+	<button id="cart-empty">{"Empty Cart"}</button>
+	<button id="cart-continue">{"Continue Browsing"}</button>
+	<button id="cart-checkout">{"Checkout"}</button>
+</p>
 
 <script>
 cart.init ({
-	show_cart: '#cart-contents'
+	tpl_cart: '#tpl-cart',
+	show_cart: '#cart-contents',
+	button_update: '#cart-update',
+	button_empty: '#cart-empty',
+	button_continue: '#cart-continue',
+	button_checkout: '#cart-checkout'
 });
 </script>

@@ -7,6 +7,7 @@ $page->title = __ ('Shopping Cart');
 $page->add_style ('/apps/products/css/products.css');
 $page->add_script ('/js/json2.js');
 $page->add_script ('/js/jstorage.js');
+$page->add_script ('/apps/products/js/handlebars-v3.0.1.js');
 $page->add_script ('/apps/products/js/accounting.min.js');
 $page->add_script ('/apps/products/js/cart.js');
 
