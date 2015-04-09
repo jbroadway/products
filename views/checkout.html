@@ -1,0 +1,69 @@
+{% if ! User::require_login () %}
+
+<div class="e-row-variable">
+	<div class="e-col-50">
+		<h3>{"Already a member?"}</h3>
+		{! user/login?redirect=/products/checkout !}
+	</div>
+	<div class="e-col-50">
+		<h3>{"Create a new account"}</h3>
+		{! user/signup?redirect=/products/checkout !}
+	</div>
+</div>
+
+{% else %}
+
+<script id="tpl-checkout" type="text/html">
+<table class="cart-summary">
+	<tr>
+		<td><strong>{"Subtotal"}</strong></td>
+		<td class="cart-col-price">\{{money subtotal}}</td>
+	</tr>
+	<tr>
+		<td><strong>{"Shipping"}</strong></td>
+		<td class="cart-col-price">\{{money shipping}}</td>
+	</tr>
+\{{#each taxes}}
+	<tr>
+		<td><strong>\{{tax_name}}</strong></td>
+		<td class="cart-col-price">\{{money tax_amount}}</td>
+	</tr>
+\{{/each}}
+	<tr>
+		<td><strong>{"Total"}</strong></td>
+		<td class="cart-col-price">\{{money total}}</td>
+	</tr>
+</table>
+</script>
+
+<p><a href="/products/cart">{"View or modify your cart"}</a></p>
+
+<h3>{"Order Summary"}</h3>
+
+<div id="checkout-summary">
+	<p>{"Calculating taxes and shipping. Please wait."}</p>
+</div>
+
+<h3>{"Shipping Address"}</h3>
+
+<p>...</p>
+
+<p>{! stripe/button
+	?description=[payment_description]
+	&amount=[total]
+	&button=Pay+Now
+	&redirect=/products/order/%d/[id]/completed
+	&address=[address]
+!}</p>
+
+<script>
+cart.init ({
+	show_checkout: '#checkout-summary',
+	tpl_checkout: '#tpl-checkout',
+	taxes: {{taxes|json_encode}},
+	max_shipping: {{max_shipping}},
+	shipping_free_over: {{shipping_free_over}}
+});
+</script>
+
+{% end %}

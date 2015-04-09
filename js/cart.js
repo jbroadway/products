@@ -8,18 +8,24 @@ var cart = (function ($, Handlebars, accounting) {
 		},
 		tpl = {
 			cart: undefined,
+			checkout: undefined
 		},
 		opts = {
 			currency: 'USD',
 			currency_symbol: '$',
-			prefix: '/products/api',
+			prefix: '/products/api/',
+			taxes: [],
+			max_shipping: false,
+			shipping_free_over: false,
 			button_add: undefined,
 			button_update: undefined,
 			button_empty: undefined,
 			button_continue: undefined,
 			button_checkout: undefined,
 			show_cart: undefined,
-			tpl_cart: undefined
+			show_checkout: undefined,
+			tpl_cart: undefined,
+			tpl_checkout: undefined
 		};
 	
 	/**
@@ -170,6 +176,97 @@ var cart = (function ($, Handlebars, accounting) {
 	};
 	
 	/**
+	 * Returns a list of item IDs.
+	 */
+	self.item_ids = function () {
+		var ids = [];
+		for (var id in self.contents) {
+			ids.push (id);
+		}
+		return ids;
+	};
+	
+	/**
+	 * Returns taxes as an array of objects
+	 * with the tax_name and tax_amount calculated
+	 * based on opts.taxes and the provided items
+	 * list.
+	 */
+	self.taxes = function (items) {
+		var taxes = [];
+
+		for (var tax in opts.taxes) {
+			var percent = parseInt (opts.taxes[tax]),
+				amt = 0;
+
+			for (var i in items) {
+				for (var t in items[i].taxes) {
+					if (items[i].taxes[t] === tax) {
+						amt += items[i].price * (percent / 100)
+					}
+				}
+			}
+
+			if (amt > 0) {
+				taxes.push ({
+					tax_name: tax,
+					tax_amount: amt
+				});
+			}
+		}
+
+		return taxes;
+	};
+
+	/**
+	 * Returns the shipping amount calculated based
+	 * on the max_shipping and shipping_free_over
+	 * settings and the provided items list.
+	 */
+	self.shipping = function (items) {
+		return 0;
+	};
+	
+	/**
+	 * Add the tax amounts from the provided tax list
+	 * returned by self.taxes ().
+	 */
+	self.add_taxes = function (taxes) {
+		var total = 0;
+		for (var i in taxes) {
+			total += taxes[i].tax_amount;
+		}
+		return total;
+	};
+	
+	/**
+	 * Callback from checkout_info API call.
+	 */
+	self.checkout = function (res) {
+		if (! res.success) {
+			$(opts.show_checkout).html ('<p>An unknown error occurred. Please try again later.</p>');
+			return;
+		}
+
+		if (opts.show_checkout === undefined) {
+			$(opts.show_checkout).html ('<p>Checkout is not yet configured for this site.</p>');
+			return;
+		}
+		
+		console.log (res.data[0]);
+		var data = {
+			subtotal: self.subtotal (),
+			shipping: self.shipping (res.data),
+			taxes: self.taxes (res.data),
+			total: 0
+		};
+
+		data.total = data.subtotal + self.add_taxes (data.taxes) + data.shipping;
+
+		$(opts.show_checkout).html (tpl.checkout (data));
+	};
+	
+	/**
 	 * Initialize the plugin.
 	 */
 	self.init = function (options) {
@@ -197,6 +294,10 @@ var cart = (function ($, Handlebars, accounting) {
 			tpl.cart = Handlebars.compile ($(opts.tpl_cart).html ());
 		}
 		
+		if (opts.tpl_checkout !== undefined) {
+			tpl.checkout = Handlebars.compile ($(opts.tpl_checkout).html ());
+		}
+		
 		Handlebars.registerHelper ('money', self.format);
 		Handlebars.registerHelper ('subtotal', self.format_subtotal);
 		
@@ -221,6 +322,10 @@ var cart = (function ($, Handlebars, accounting) {
 		
 		if (opts.button_checkout !== undefined) {
 			$(opts.button_checkout).on ('click', self.checkout_handler);
+		}
+		
+		if (opts.show_checkout !== undefined) {
+			$.get (opts.prefix + 'checkout_info', {items: self.item_ids ()}, self.checkout);
 		}
 	};
 	
