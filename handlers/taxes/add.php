@@ -11,7 +11,8 @@ echo $form->handle (function ($form) {
 	// Create and save a new tax 
 	$tax = new products\Tax (array (
 		'name' => $_POST['name'],
-		'percent' => $_POST['percent']
+		'percent' => $_POST['percent'],
+		'charge_on_shipping' => $_POST['charge_on_shipping']
 	));
 	$tax->put ();
 

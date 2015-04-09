@@ -21,5 +21,6 @@ create table #prefix#products_category (
 
 create table #prefix#products_taxes (
 	name char(24) not null primary key,
-	percent int not null
+	percent int not null,
+	charge_on_shipping int not null default 0
 );

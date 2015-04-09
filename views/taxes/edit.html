@@ -13,6 +13,14 @@
 	<span class="notice" id="percent-notice">{"Please enter a percent."}</span>
 </p>
 
+<p>
+	{"Charge on shipping"}:<br />
+	<select name="charge_on_shipping">
+		<option value="0"{% if ! charge_on_shipping %} selected{% end %}>{"No"}</option>
+		<option value="1"{% if charge_on_shipping %} selected{% end %}>{"Yes"}</option>
+	</select>
+</p>
+
 <p><input type="submit" value="{"Save Tax"}" /></p>
 
 </form>

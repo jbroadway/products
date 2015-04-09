@@ -7,14 +7,16 @@
 <p>
 <table width="100%">
 	<tr>
-		<th width="54%">{" Name "}</th>
-		<th width="30%" style="text-align: center">{" Percent "}</th>
+		<th width="44%">{" Name "}</th>
+		<th width="20%" style="text-align: center">{" Percent "}</th>
+		<th width="20%" style="text-align: center">{" Charge on Shipping"}</th>
 		<th width="16%">&nbsp;</th>
 	</tr>
 {% foreach items %}
 	<tr>
 		<td>{{ loop_value->name }}</td>
 		<td style="text-align: center">{{ loop_value->percent }}%</td>
+		<td style="text-align: center">{% if loop_value->charge_on_shipping %}{"Yes"}{% else %}{"No"}{% end %}</td>
 		<td style="text-align: right">
 			<a	href="/products/taxes/edit?id={{ loop_value->name }}">{"Edit"}</a> |
 			<a	href="/products/taxes/delete"

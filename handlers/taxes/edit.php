@@ -14,6 +14,7 @@ echo $form->handle (function ($form) {
 	$tax = $form->data;
 	$tax->name = $_POST['name'];
 	$tax->percent = $_POST['percent'];
+	$tax->charge_on_shipping = $_POST['charge_on_shipping'];
 	$tax->put ();
 
 	if ($tax->error) {

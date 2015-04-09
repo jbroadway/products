@@ -24,7 +24,8 @@ create unique index #prefix#products_category_name on #prefix#products_category 
 
 create table #prefix#products_taxes (
 	name character(24) not null,
-	percent integer not null
+	percent integer not null,
+	charge_on_shipping int not null default 0
 );
 
 create unique index #prefix#products_tax on #prefix#products_taxes (name);

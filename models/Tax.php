@@ -7,6 +7,7 @@ namespace products;
  *
  * - name
  * - percent
+ * - charge_on_shipping
  */
 class Tax extends \Model {
 	public $table = '#prefix#products_taxes';
