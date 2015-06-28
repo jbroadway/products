@@ -14,6 +14,15 @@ layout = default
 
 payment_handler = ""
 
+; A callback to check for available discounts for the current user's
+; membership type, specified as a percentage discount.
+discount_callback = ""
+
+; A callback to check whether an "invoice me" option should be available
+; for payments. The site owner will receive an email of the order that
+; they will manually invoice for.
+allow_invoice_callback = ""
+
 ; Whether to use the web server's built-in file sending
 ; for faster downloads. Requires the appropriate web
 ; server extension to be enabled.
