@@ -29,3 +29,18 @@ create table #prefix#products_taxes (
 );
 
 create unique index #prefix#products_tax on #prefix#products_taxes (name);
+
+create table #prefix#products_order (
+	id integer primary key,
+	user_id int not null,
+	payment_id int not null,
+	ts datetime not null,
+	status char(32) not null default 'pending',
+	subtotal int not null,
+	shipping int not null,
+	taxes text,
+	total int not null,
+	items text
+);
+
+create index #prefix#products_order_user on #prefix#products_order (user_id, status, ts);

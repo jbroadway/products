@@ -1,5 +1,5 @@
 create table #prefix#products (
-	id integer primary key,
+	id serial not null primary key,
 	name character(72) not null,
 	price integer not null,
 	photo character(255) not null default '',
@@ -29,3 +29,18 @@ create table #prefix#products_taxes (
 );
 
 create unique index #prefix#products_tax on #prefix#products_taxes (name);
+
+create table #prefix#products_order (
+	id serial not null primary key,
+	user_id int not null,
+	payment_id int not null,
+	ts datetime not null,
+	status char(32) not null default 'pending',
+	subtotal int not null,
+	shipping int not null,
+	taxes text,
+	total int not null,
+	items text
+);
+
+create index #prefix#products_order_user on #prefix#products_order (user_id, status, ts);
