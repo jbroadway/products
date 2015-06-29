@@ -49,7 +49,12 @@ $page->add_script ('/apps/products/js/cart.js');
 
 // Create a POST request to save the order info from the cart
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-	echo $tpl->render ('products/checkout_post', $o->orig ());
+	echo $tpl->render ('products/checkout_post', array (
+		'taxes' => products\Tax::query ()->fetch_orig (),
+		'max_shipping' => Appconf::products ('Products', 'max_shipping'),
+		'shipping_free_over' => Appconf::products ('Products', 'shipping_free_over'),
+		'order' => $o->orig ()
+	));
 	return;
 }
 

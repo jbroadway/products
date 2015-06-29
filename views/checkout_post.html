@@ -1,8 +1,12 @@
-<p>{"Calculating taxes and shipping. Please wait."}</p>
+<div id="checkout-summary">{"Calculating taxes and shipping. Please wait."}</div>
 
 <script>
 cart.init ({
-	order: {{id}},
+	show_checkout: '#checkout-summary',
+	order: {{order->id}},
+	taxes: {{taxes|json_encode}},
+	max_shipping: {{max_shipping}},
+	shipping_free_over: {{shipping_free_over}},
 	post: true
 });
 </script>

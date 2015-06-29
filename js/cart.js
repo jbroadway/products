@@ -262,6 +262,25 @@ var cart = (function ($, Handlebars, accounting) {
 	};
 	
 	/**
+	 * Calculate totals based on results from checkout_info API call.
+	 */
+	self.calculate_totals = function (items) {
+		var subtotal = self.subtotal (),
+			shipping = self.shipping (items, subtotal);
+
+		var data = {
+			subtotal: subtotal,
+			shipping: shipping,
+			taxes: self.taxes (items, shipping),
+			total: 0
+		};
+
+		data.total = data.subtotal + data.shipping + self.add_taxes (data.taxes);
+
+		return data;
+	};
+	
+	/**
 	 * Callback from checkout_info API call.
 	 */
 	self.checkout = function (res) {
@@ -275,19 +294,39 @@ var cart = (function ($, Handlebars, accounting) {
 			return;
 		}
 		
-		var subtotal = self.subtotal (),
-			shipping = self.shipping (res.data, subtotal);
-
-		var data = {
-			subtotal: subtotal,
-			shipping: shipping,
-			taxes: self.taxes (res.data, shipping),
-			total: 0
-		};
-
-		data.total = data.subtotal + data.shipping + self.add_taxes (data.taxes);
+		var data = self.calculate_totals (res.data);
 
 		$(opts.show_checkout).html (tpl.checkout (data));
+	};
+	
+	/**
+	 * Post the order to the server to continue checkout and save the
+	 * order details to the database.
+	 */
+	self.post_order = function (res) {
+		if (! res.success) {
+			$(opts.show_checkout).html ('<p>An unknown error occurred. Please try again later.</p>');
+			return;
+		}
+
+		if (opts.show_checkout === undefined) {
+			$(opts.show_checkout).html ('<p>Checkout is not yet configured for this site.</p>');
+			return;
+		}
+		
+		var data = self.calculate_totals (res.data);
+		console.log (data);
+		
+		$form = $('<form>').attr ('method', 'post');
+
+		for (var i in data) {
+			console.log (i);
+			console.log (data[i]);
+			$('<input type="hidden">').attr ('name', i).attr ('value', data[i]).appendTo ($form);
+		}
+
+		$form.appendTo ('body');
+		$form.submit ();
 	};
 	
 	/**
@@ -305,11 +344,11 @@ var cart = (function ($, Handlebars, accounting) {
 			}
 		}
 
-		if (opts.max_shipping !== undefined) {
+		if (opts.max_shipping !== undefined && opts.max_shipping !== false) {
 			opts.max_shipping = parseInt (opts.max_shipping);
 		}
 
-		if (opts.shipping_free_over !== undefined) {
+		if (opts.shipping_free_over !== undefined && opts.shipping_free_over !== false) {
 			opts.shipping_free_over = parseInt (opts.shipping_free_over);
 		}
 		
@@ -319,6 +358,14 @@ var cart = (function ($, Handlebars, accounting) {
 			self.contents = $.parseJSON (stored);
 		} else {
 			self.serialize ();
+		}
+		
+		// Create a post to save the cart data to the server
+		if (opts.post) {
+			console.log ('posting data');
+			console.log (self.item_ids ());
+			$.get (opts.prefix + 'checkout_info', {items: self.item_ids ()}, self.post_order);
+			return;
 		}
 		
 		// Compile, configure and render handlebars template
