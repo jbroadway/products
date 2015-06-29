@@ -27,7 +27,7 @@ echo $form->handle (function ($form) use ($product) {
 	$product->taxes = is_array ($_POST['taxes']) ? json_encode ($_POST['taxes']) : '[]';
 	$product->address = $_POST['address'];
 	$product->details = $_POST['details'];
-	$products->shipping = $_POST['shipping'] * 100;
+	$product->shipping = $_POST['shipping'] * 100;
 	$product->put ();
 
 	if ($product->error) {
