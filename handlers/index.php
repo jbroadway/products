@@ -6,17 +6,25 @@ $page->layout = Appconf::products ('Products', 'layout');
 $this->run ('admin/util/minimal-grid');
 $page->add_style ('/apps/products/css/products.css');
 
+$discount = products\App::discount ();
+$allow_invoice = products\App::allow_invoice ();
+
 $products = products\Product::query ()
 	->order ('category', 'asc')
 	->order ('name', 'asc')
-	->fetch_orig ();
+	->fetch ();
+
+foreach ($products as $k => $p) {
+	$p->discount_price = $p->discount_price ($discount);
+	$products[$k] = $p->orig ();
+}
 
 echo $tpl->render (
 	'products/index',
 	array (
 		'products' => $products,
-		'category' => null
+		'category' => null,
+		'discount' => $discount,
+		'allow_invoice' => $allow_invoice
 	)
 );
-
-?>

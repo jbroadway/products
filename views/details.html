@@ -19,7 +19,14 @@
 	<div class="products-summary-info e-col-60 e-no-padding">
 
 		<div class="products-summary-info-text">
-			<p class="products-item-price">{"Price"}: ${{price|products\Filter::money}}</p>
+			<p class="products-item-price">
+				{"Price"}:
+				{% if discount_price !== $data->price %}
+					<strike>${{price|products\Filter::money}}</strike> ${{discount_price|products\Filter::money}} ({{discount}}% {"off"})
+				{% else %}
+					${{price|products\Filter::money}}
+				{% end %}
+			</p>
 			<p class="products-item-description">{{description}}</p>
 
 		{% if quantity == 0 %}
@@ -29,7 +36,7 @@
 						data-id="{{id}}"
 						data-url="/products/details/{{id}}/{{name|URLify::filter}}"
 						data-label="{{name}}"
-						data-price="{{price}}">{"Add to cart"}</button></p>
+						data-price="{{discount_price}}">{"Add to cart"}</button></p>
 		{% end %}
 		</div>
 	</div>

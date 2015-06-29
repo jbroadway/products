@@ -25,11 +25,16 @@ $page->add_script ('/apps/products/js/handlebars-v3.0.1.js');
 $page->add_script ('/apps/products/js/accounting.min.js');
 $page->add_script ('/apps/products/js/cart.js');
 
+$discount = products\App::discount ();
+$allow_invoice = products\App::allow_invoice ();
+
 $p = $product->orig ();
-$p->total = $p->price;
+$p->discount = $discount;
+$p->discount_price = $product->discount_price ($discount);
+$p->total = $p->discount_price;
 $taxes = products\Tax::taxes (json_decode ($p->taxes));
 foreach ($taxes as $tax => $percent) {
-	$p->total += round (products\Tax::calculate ($p->price, $percent));
+	$p->total += round (products\Tax::calculate ($p->discount_price, $percent));
 }
 $p->payment_description = $p->name . ' (#' . str_pad ($p->id, 3, '0', STR_PAD_LEFT) . ')';
 $p->address = $p->address ? 'Yes' : 'No';

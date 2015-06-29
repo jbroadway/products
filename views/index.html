@@ -29,7 +29,13 @@
 				</div>
 				<div class="products-item-info">
 					<h4><a href="/products/details/{{ product->id }}/{{ product->name|URLify::filter }}">{{product->name}}</a></h4>
-					<p class="products-item-price">${{product->price|products\Filter::money}}</p>
+					<p class="products-item-price">
+						{% if product->discount_price !== $data->product->price %}
+							<strike>${{product->price|products\Filter::money}}</strike> ${{product->discount_price|products\Filter::money}} ({{discount}}% {"off"})
+						{% else %}
+							${{product->price|products\Filter::money}}
+						{% end %}
+					</p>
 					<a href="/products/details/{{ product->id }}/{{ product->name|URLify::filter }}" class="products-item-link">{"Details"}</a>
 				</div>
 			</div>
