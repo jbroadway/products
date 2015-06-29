@@ -4,6 +4,7 @@
 var cart = (function ($, Handlebars, accounting) {
 	var self = {
 			storage_key: 'products_cart',
+			order_key: 'products_order',
 			contents: {}
 		},
 		tpl = {
@@ -11,6 +12,8 @@ var cart = (function ($, Handlebars, accounting) {
 			checkout: undefined
 		},
 		opts = {
+			order: undefined,
+			post: false,
 			currency: 'USD',
 			currency_symbol: '$',
 			prefix: '/products/api/',
@@ -192,24 +195,29 @@ var cart = (function ($, Handlebars, accounting) {
 	 * based on opts.taxes and the provided items
 	 * list.
 	 */
-	self.taxes = function (items) {
+	self.taxes = function (items, shipping) {
 		var taxes = [];
 
 		for (var tax in opts.taxes) {
-			var percent = parseInt (opts.taxes[tax]),
+			var name = opts.taxes[tax].name,
+				percent = parseInt (opts.taxes[tax].percent),
 				amt = 0;
 
 			for (var i in items) {
 				for (var t in items[i].taxes) {
-					if (items[i].taxes[t] === tax) {
-						amt += items[i].price * (percent / 100)
+					if (items[i].taxes[t] === name) {
+						amt += parseInt (items[i].price) * self.contents[items[i].id].qty * (percent / 100)
 					}
 				}
+			}
+			
+			if (opts.taxes[tax].charge_on_shipping) {
+				amt += shipping * (percent / 100);
 			}
 
 			if (amt > 0) {
 				taxes.push ({
-					tax_name: tax,
+					tax_name: name,
 					tax_amount: amt
 				});
 			}
@@ -223,8 +231,22 @@ var cart = (function ($, Handlebars, accounting) {
 	 * on the max_shipping and shipping_free_over
 	 * settings and the provided items list.
 	 */
-	self.shipping = function (items) {
-		return 0;
+	self.shipping = function (items, subtotal) {
+		if (opts.shipping_free_over !== undefined && opts.shipping_free_over > 0 && subtotal >= opts.shipping_free_over) {
+			return 0;
+		}
+
+		var amt = 0;
+
+		for (var i in items) {
+			amt += parseInt (items[i].shipping) * self.contents[items[i].id].qty;
+		}
+
+		if (opts.max_shipping !== undefined && opts.max_shipping > 0 && amt > opts.max_shipping) {
+			amt = opts.max_shipping;
+		}
+
+		return amt;
 	};
 	
 	/**
@@ -234,7 +256,7 @@ var cart = (function ($, Handlebars, accounting) {
 	self.add_taxes = function (taxes) {
 		var total = 0;
 		for (var i in taxes) {
-			total += taxes[i].tax_amount;
+			total += parseInt (taxes[i].tax_amount);
 		}
 		return total;
 	};
@@ -253,15 +275,17 @@ var cart = (function ($, Handlebars, accounting) {
 			return;
 		}
 		
-		console.log (res.data[0]);
+		var subtotal = self.subtotal (),
+			shipping = self.shipping (res.data, subtotal);
+
 		var data = {
-			subtotal: self.subtotal (),
-			shipping: self.shipping (res.data),
-			taxes: self.taxes (res.data),
+			subtotal: subtotal,
+			shipping: shipping,
+			taxes: self.taxes (res.data, shipping),
 			total: 0
 		};
 
-		data.total = data.subtotal + self.add_taxes (data.taxes) + data.shipping;
+		data.total = data.subtotal + data.shipping + self.add_taxes (data.taxes);
 
 		$(opts.show_checkout).html (tpl.checkout (data));
 	};
@@ -279,6 +303,14 @@ var cart = (function ($, Handlebars, accounting) {
 			} else if (opts.currency === 'EUR') {
 				opts.currency_symbol = '€';
 			}
+		}
+
+		if (opts.max_shipping !== undefined) {
+			opts.max_shipping = parseInt (opts.max_shipping);
+		}
+
+		if (opts.shipping_free_over !== undefined) {
+			opts.shipping_free_over = parseInt (opts.shipping_free_over);
 		}
 		
 		// Initialize cart from storage
