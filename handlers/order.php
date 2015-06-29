@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Accepts completed orders.
+ *
+ * Parameters:
+ *
+ * - stripe\Payment ID
+ * - payments\Order ID
+ * - status (completed|download)
+ */
+
 if (count ($this->params) < 2) $this->redirect ('/products');
 if (! isset ($this->params[2])) $this->params[2] = null;
 
