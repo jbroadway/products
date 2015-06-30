@@ -63,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Update the order info from the POST request
 $o->subtotal = $_POST['subtotal'];
 $o->shipping = $_POST['shipping'];
-$o->taxes = json_encode ($_POST['taxes']);
+$o->taxes = $_POST['taxes'];
 $o->total = $_POST['total'];
-$o->items = json_encode ($_POST['items']);
+$o->items = $_POST['items'];
 $o->put ();
 
 // Show order summary and payment button

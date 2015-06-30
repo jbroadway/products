@@ -315,14 +315,19 @@ var cart = (function ($, Handlebars, accounting) {
 		}
 		
 		var data = self.calculate_totals (res.data);
+		//data.taxes = [];
+		data.items = self.item_ids ();
 		console.log (data);
+		//return;
 		
 		$form = $('<form>').attr ('method', 'post');
 
 		for (var i in data) {
-			console.log (i);
-			console.log (data[i]);
-			$('<input type="hidden">').attr ('name', i).attr ('value', data[i]).appendTo ($form);
+			if (i === 'items' || i === 'taxes') {
+				$('<input type="hidden">').attr ('name', i).attr ('value', JSON.stringify (data[i])).appendTo ($form);
+			} else {
+				$('<input type="hidden">').attr ('name', i).attr ('value', data[i]).appendTo ($form);
+			}
 		}
 
 		$form.appendTo ('body');
@@ -362,8 +367,6 @@ var cart = (function ($, Handlebars, accounting) {
 		
 		// Create a post to save the cart data to the server
 		if (opts.post) {
-			console.log ('posting data');
-			console.log (self.item_ids ());
 			$.get (opts.prefix + 'checkout_info', {items: self.item_ids ()}, self.post_order);
 			return;
 		}
