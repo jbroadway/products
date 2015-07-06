@@ -315,9 +315,14 @@ var cart = (function ($, Handlebars, accounting) {
 		}
 		
 		var data = self.calculate_totals (res.data);
-		//data.taxes = [];
-		data.items = self.item_ids ();
-		console.log (data);
+		data.items = res.data;
+
+		for (var i in data.items) {
+			data.items[i].price = self.contents[data.items[i].id].price;
+			data.items[i].label = self.contents[data.items[i].id].label;
+			data.items[i].quantity = self.contents[data.items[i].id].qty;
+		}
+		//console.log (data);
 		//return;
 		
 		$form = $('<form>').attr ('method', 'post');

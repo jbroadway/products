@@ -18,8 +18,8 @@ namespace products;
  * - total			Order total including taxes and shipping
  * - items			JSON-encoded array of ordered items (id, label, price, qty, taxes, shipping)
  */
-class Order extends \ExtendedModel {
+class Order extends \Model {
 	public $table = '#prefix#products_order';
 	
-	public $_extended_field = 'items';
+	//public $_extended_field = 'items';
 }

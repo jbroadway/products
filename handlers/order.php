@@ -15,17 +15,39 @@ if (! isset ($this->params[2])) $this->params[2] = null;
 
 $page->layout = Appconf::products ('Products', 'layout');
 
-$order = new stripe\Payment ($this->params[0]);
+$pmt = new stripe\Payment ($this->params[0]);
 
-if ($order->error) {
-	error_log ('Order not found (' . $this->params[0] . '): ' . $product->error);
+if ($pmt->error) {
+	error_log ('Payment not found (' . $this->params[0] . '): ' . $pmt->error);
 	echo $this->error (
 		404,
-		__ ('Order not found'),
-		__ ('Order #%d was not found.', $this->params[0])
+		__ ('Payment not found'),
+		__ ('Payment #%d was not found.', $this->params[0])
 	);
 	return;
 }
+
+$order = new products\Order ($this->params[1]);
+
+if ($order->error) {
+	error_log ('Order not found (' . $this->params[1] . '): ' . $order->error);
+	echo $this->error (
+		404,
+		__ ('Order not found'),
+		__ ('Order #%d was not found.', $this->params[1])
+	);
+	return;
+}
+
+info ($pmt->orig ());
+info ($order->orig ());
+info (json_decode ($order->taxes));
+info (json_decode ($order->items));
+return;
+
+// TODO: Mark order completed
+
+// TODO: Finish updating from here
 
 $product = new products\Product ($this->params[1]);
 
