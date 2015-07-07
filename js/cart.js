@@ -14,6 +14,7 @@ var cart = (function ($, Handlebars, accounting) {
 		opts = {
 			order: undefined,
 			post: false,
+			clear: false,
 			currency: 'USD',
 			currency_symbol: '$',
 			prefix: '/products/api/',
@@ -340,6 +341,14 @@ var cart = (function ($, Handlebars, accounting) {
 	};
 	
 	/**
+	 * Empty the cart of its contents.
+	 */
+	self.clear_cart = function () {
+		self.contents = {};
+		self.serialize ();
+	};
+	
+	/**
 	 * Initialize the plugin.
 	 */
 	self.init = function (options) {
@@ -373,6 +382,11 @@ var cart = (function ($, Handlebars, accounting) {
 		// Create a post to save the cart data to the server
 		if (opts.post) {
 			$.get (opts.prefix + 'checkout_info', {items: self.item_ids ()}, self.post_order);
+			return;
+
+		// Clear the cart if clear = true
+		} else if (opts.clear) {
+			self.clear_cart ();
 			return;
 		}
 		

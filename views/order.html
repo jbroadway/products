@@ -1,33 +1,63 @@
-{% if action == 'completed' %}
-<p id="order-confirmed">{"Your order has been confirmed."}</p>
+{% if clear_cart %}
+<p id="order-confirmed"><strong>{"Your order has been confirmed."}</strong></p>
 
-<p id="order-number"><strong>{"Order Number"}: {{order->id|str_pad (%s, 3, '0', STR_PAD_LEFT)}}-{{product->id}}</strong></p>
+<script>
+cart.init ({
+	clear: true
+});
+</script>
 {% end %}
 
-{% if product->download != '' %}
-<p id="product-download">
-	<a href="/products/order/{{order->id}}/{{product->id}}/download/{{product->download|basename|urlencode}}">{"Click here to download the file"} <em>"{{product->download|basename}}"</em></a>
-</p>
-{% end %}
+<p id="order-date">{"Order Date"}: {{order->ts|I18n::date_time}}</p>
 
 <p>
 <table id="order-table" style="width: 100%">
 	<tr>
 		<th>{"Description"}</th>
+		<th style="text-align: right">{"Price"}</th>
+		<th style="text-align: right">{"Quantity"}</th>
 		<th style="text-align: right">{"Amount"}</th>
 	</tr>
+{% foreach items as product %}
 	<tr>
-		<td>{{product->name}}</th>
+		<td>{{product->label}}</th>
 		<td style="text-align: right">${{product->price|products\Filter::money}}</td>
+		<td style="text-align: right">{{product->quantity}}</td>
+		<td style="text-align: right">${{product->price * $data->product->quantity|products\Filter::money}}</td>
 	</tr>
-{% foreach taxes as tax, percent %}
-	<tr>
-		<th style="text-align: right">{{tax}}</th>
-		<td style="text-align: right">${{products\Tax::calculate ($data->product->price, $data->percent)|products\Filter::money}}</td>
 {% end %}
 	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th style="text-align: right">{"Subtotal"}</th>
+		<td style="text-align: right">${{order->subtotal|products\Filter::money}}</td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th style="text-align: right">{"Shipping"}</th>
+		<td style="text-align: right">${{order->shipping|products\Filter::money}}</td>
+	</tr>
+{% foreach taxes as tax %}
+	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th style="text-align: right">{{tax->tax_name}}</th>
+		<td style="text-align: right">${{tax->tax_amount|products\Filter::money}}</td>
+{% end %}
+	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
 		<th style="text-align: right">{"Total"}</th>
-		<td style="text-align: right">${{order->amount|products\Filter::money}}</td>
+		<td style="text-align: right">${{order->total|products\Filter::money}}</td>
 	</tr>
 </table>
 </p>
+
+<!--
+{ if product->download != '' %}
+<p id="product-download">
+	<a href="/products/order/{{pmt->id}}/{{order->id}}/download/{{product->download|basename|urlencode}}">{"Click here to download the file"} <em>"{{product->download|basename}}"</em></a>
+</p>
+{ end %}
+-->

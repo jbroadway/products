@@ -4,6 +4,7 @@ $this->run ('admin/util/minimal-grid');
 
 $page->id = 'products';
 $page->title = __ ('Checkout');
+$page->layout = Appconf::products ('Products', 'layout');
 
 // Ensure user is logged in
 if (! User::require_login ()) {
