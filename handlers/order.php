@@ -72,6 +72,7 @@ if ($order->status === 'pending') {
 	$order->status = 'completed';
 	$order->put ();
 	$send_receipt = true;
+	unset ($_SESSION['products_order']);
 }
 
 // TODO: Finish updating from here

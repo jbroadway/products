@@ -14,6 +14,10 @@ if (! User::require_login ()) {
 
 // Create a new order and redirect to /products/checkout/ORDER_ID
 if (! isset ($this->params[0])) {
+	if (isset ($_SESSION['products_order'])) {
+		$this->redirect ('/products/checkout/' . $_SESSION['products_order']);
+	}
+
 	$o = new products\Order (array (
 		'user_id' => User::val ('id'),
 		'payment_id' => 0,
@@ -31,6 +35,7 @@ if (! isset ($this->params[0])) {
 		return;
 	}
 	
+	$_SESSION['products_order'] = $o->id;
 	$this->redirect ('/products/checkout/' . $o->id);
 }
 
