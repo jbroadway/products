@@ -26,28 +26,7 @@
 <h3>{"Order Summary"}</h3>
 
 <div id="checkout-summary">
-
-<table class="cart-summary">
-	<tr>
-		<td><strong>{"Subtotal"}</strong></td>
-		<td class="cart-col-price">\{{money subtotal}}</td>
-	</tr>
-	<tr>
-		<td><strong>{"Shipping"}</strong></td>
-		<td class="cart-col-price">\{{#if shipping}}\{{money shipping}}\{{else}}{"FREE"}\{{/if}}</td>
-	</tr>
-\{{#each taxes}}
-	<tr>
-		<td><strong>\{{tax_name}}</strong></td>
-		<td class="cart-col-price">\{{money tax_amount}}</td>
-	</tr>
-\{{/each}}
-	<tr>
-		<td><strong>{"Total"}</strong></td>
-		<td class="cart-col-price">\{{money total}}</td>
-	</tr>
-</table>
-
+	<p>{"Generating order summary. Please wait."}</p>
 </div>
 
 {% if shipping_free_over %}
