@@ -140,15 +140,35 @@ var cart = (function ($, Handlebars, accounting) {
 	self.update_handler = function (e) {
 		e.preventDefault ();
 		
-		$('.cart-input-qty').each (function () {
-			var $this = $(this),
-				id = $this.data ('id'),
-				qty = $this.val ();
-			
-			self.update (id, qty);
-		});
+		$.get (opts.prefix + 'checkout_info', {items: self.item_ids ()}, function (res) {
+			if (! res.success) {
+				$(opts.show_checkout).html ('<p>An unknown error occurred. Please try again later.</p>');
+				return;
+			}
 		
-		self.show_cart ();
+			var items = {};
+			
+			for (var i in res.data) {
+				items[res.data[i].id] = {
+					name: res.data[i].name,
+					quantity: parseInt (res.data[i].quantity)
+				};
+			}
+		
+			$('.cart-input-qty').each (function () {
+				var $this = $(this),
+					id = $this.data ('id'),
+					qty = $this.val ();
+				
+				if (items[id].quantity > 0 && qty > items[id].quantity) {
+					alert ('Only ' + items[id].quantity + ' "' + items[id].name + '" remaining.');
+				} else {
+					self.update (id, qty);
+				}
+			});
+		
+			self.show_cart ();
+		});
 	};
 	
 	/**

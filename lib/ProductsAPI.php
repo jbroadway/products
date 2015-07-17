@@ -34,7 +34,7 @@ class ProductsAPI extends \Restful {
 
 		$ids = $_GET['items'];
 		
-		$res = Product::query ('id, price, quantity, taxes, shipping')
+		$res = Product::query ('id, name, price, quantity, taxes, shipping')
 			->where (function ($q) use ($ids) {
 				foreach ($ids as $k => $id) {
 					if ($k === 0) {
