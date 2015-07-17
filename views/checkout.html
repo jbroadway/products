@@ -35,7 +35,7 @@
 
 <p>{! stripe/button
 	?description=[payment_description]
-	&amount=[total]
+	&amount=[total|round]
 	&button=Pay+Now
 	&redirect=/products/order/%d/[order->id]/completed
 	&address=Yes

@@ -104,20 +104,25 @@
 	clear: both;
 }
 
-.cart-contents-table {
+.cart-contents-table,
+.order-table {
 	width: 100%;
 }
 
-.cart-contents-table th {
+.cart-contents-table th,
+.order-table th {
 	font-weight: bold;
 }
 
 .cart-contents-table th,
-.cart-contents-table td {
+.cart-contents-table td,
+.order-table th,
+.order-table td {
 	padding: 5px;
 }
 
-.cart-contents-table tr:nth-child(odd) {
+.cart-contents-table tr:nth-child(odd),
+.order-table tr:first-child {
 	background-color: #f5f5f5;
 }
 

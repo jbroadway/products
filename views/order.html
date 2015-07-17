@@ -11,7 +11,7 @@ cart.init ({
 <p id="order-date">{"Order Date"}: {{order->ts|I18n::date_time}}</p>
 
 <p>
-<table id="order-table" style="width: 100%">
+<table class="order-table" style="width: 100%">
 	<tr>
 		<th>{"Description"}</th>
 		<th style="text-align: right">{"Price"}</th>
@@ -54,10 +54,13 @@ cart.init ({
 </table>
 </p>
 
-<!--
-{ if product->download != '' %}
-<p id="product-download">
-	<a href="/products/order/{{pmt->id}}/{{order->id}}/download/{{product->download|basename|urlencode}}">{"Click here to download the file"} <em>"{{product->download|basename}}"</em></a>
-</p>
-{ end %}
--->
+{% if count ($data->downloads) > 0 %}
+<div class="products-downloads">
+<h3>{"Digital downloads"}</h3>
+<ul>
+	{% foreach downloads as download %}
+	<li><a href="/products/download/{{order->id}}/{{download->id}}">{{download->name}} ({{download->download|basename}})</a></li>
+	{% end %}
+</ul>
+</div>
+{% end %}

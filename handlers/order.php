@@ -65,6 +65,12 @@ if ($pmt->user_id != $user_id || $order->user_id != $user_id) {
 	return;
 }
 
+// Get taxes, items, and item IDs
+$taxes = json_decode ($order->taxes);
+$items = json_decode ($order->items);
+$ids = array_map (function ($o) { return $o->id; }, $items);
+$qs = array_map (function ($o) { return '?'; }, $items);
+
 // Mark order completed
 $send_receipt = false;
 if ($order->status === 'pending') {
@@ -73,15 +79,25 @@ if ($order->status === 'pending') {
 	$order->put ();
 	$send_receipt = true;
 	unset ($_SESSION['products_order']);
+
+	// Reduce inventory
+	DB::execute (
+		'update #prefix#products
+		 set quantity = (quantity - 1)
+		 where id in(' . join (',', $qs) . ')
+		 and quantity > 0',
+		 $ids
+	);
 }
 
-// TODO: Finish updating from here
-
-$taxes = json_decode ($order->taxes);
-$items = json_decode ($order->items);
+$page->add_style ('/apps/products/css/products.css');
 
 if ($this->params[2] === 'completed' && $send_receipt) {
 	$page->title .= ' ' . __ ('Confirmed');
+	$page->add_script ('/js/json2.js');
+	$page->add_script ('/js/jstorage.js');
+	$page->add_script ('/apps/products/js/handlebars-v3.0.1.js');
+	$page->add_script ('/apps/products/js/accounting.min.js');
 	$page->add_script ('/apps/products/js/cart.js');
 
 	// send email receipt
@@ -124,6 +140,18 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 	}
 }
 
+// Fetch downloads to add links
+$downloads = products\Product::query ('id, name, download')
+	->where (function ($q) use ($ids) {
+		foreach ($ids as $n => $id) {
+			$tmp = ($n === 0)
+				? $q->where ('id', $id)
+				: $q->or_where ('id', $id);
+		}
+	})
+	->where ('download != ""')
+	->fetch_orig ();
+
 echo $tpl->render (
 	'products/order',
 	array (
@@ -132,11 +160,7 @@ echo $tpl->render (
 		'action' => $this->params[2],
 		'taxes' => $taxes,
 		'items' => $items,
-		'clear_cart' => $send_receipt
+		'clear_cart' => $send_receipt,
+		'downloads' => $downloads
 	)
 );
-
-info ($pmt->orig ());
-info ($order->orig ());
-info ($taxes);
-info ($items);
