@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Handles checkout payment processing.
+ *
+ * Parameters:
+ *
+ * - products\Order ID
+ *
+ * When no order ID is passed, it creates a new empty order entry
+ * and redirects the user. The order details are filled in when
+ * the client POSTs a subsequent request that includes the order ID
+ * along with the order details.
+ */
+
 $this->run ('admin/util/minimal-grid');
 
 $page->id = 'products';

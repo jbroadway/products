@@ -6,7 +6,7 @@
  * Parameters:
  *
  * - stripe\Payment ID
- * - payments\Order ID
+ * - products\Order ID
  * - status (completed|download)
  */
 
@@ -122,21 +122,6 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 		} catch (Exception $e) {
 		}
 	}
-} elseif ($this->params[2] === 'download') {
-	// TODO: Fix this
-	$page->layout = false;
-	$this->header ('Cache-control: private');
-	$this->header ('Content-disposition: attachment; filename="' . basename ($product->download) . '"');
-	if (Appconf::products ('Products', 'xsendfile') === 'lighttpd') {
-		$this->header ('X-Sendfile: ' . getcwd () . $product->download);
-		exit;
-	} elseif (Appconf::products ('Products', 'xsendfile') === 'nginx') {
-		$this->header ('X-Accel-Redirect: ' . getcwd () . $product->download);
-		exit;
-	}
-	$this->header ('Content-length: ' . filesize (ltrim ($product->download, '/')));
-	readfile (ltrim ($product->download, '/'));
-	exit;
 }
 
 echo $tpl->render (
