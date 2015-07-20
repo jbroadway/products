@@ -9,6 +9,7 @@ Click the following links to download your digital purchases.
 {% foreach downloads as download %}
 * {{download->name}} ({{download->download|basename}}):
   http://{{$_SERVER.HTTP_HOST}}/products/download/{{order->id}}/{{download->id}} 
+
 {% end %}
 {% end %}
 
@@ -16,17 +17,18 @@ Order Details:
 
 {% foreach items as product %}
 * {{product->label}} (${{product->price|products\Filter::money}})
-  Quantity: {{product->quantity|products\Filter::padding (%s, 8, 'right')}} 
+  Quantity: {{product->quantity}} 
   Amount:   ${{product->price * $data->product->quantity|products\Filter::money}} 
+
 {% end %}
 
-Subtotal: ${{order->subtotal|products\Filter::money}} 
-Shipping: ${{order->shipping|products\Filter::money}} 
+Subtotal:   ${{order->subtotal|products\Filter::money}} 
+Shipping:   ${{order->shipping|products\Filter::money}} 
 Taxes:
 {% foreach taxes as tax %}
-* {{tax->tax_name}}: ${{tax->tax_amount|products\Filter::money}} 
+* {{tax->tax_name}}:      ${{tax->tax_amount|products\Filter::money}} 
 {% end %}
-Total: ${{order->total|products\Filter::money}} 
+Total:      ${{order->total|products\Filter::money}} 
 
 Thanks again for your order, and if you have any questions just reply to let us know!
 
