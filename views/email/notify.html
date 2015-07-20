@@ -1,39 +1,50 @@
 A new order has been placed!
 
-Order Number: {{order->id|str_pad (%s, 3, '0', STR_PAD_LEFT)}}-{{product->id}} 
+Order Number: {{order->id}} 
+Order Date:   {{order->ts|I18n::date_time|strip_tags}} 
 
-{% if product->download != '' %}
-Download link for "{{product->download|basename}}"
+{% if count ($data->downloads) > 0 %}
+Digital Downloads:
 
-    http://{{$_SERVER.HTTP_HOST}}/products/order/{{order->id}}/{{product->id}}/download/{{product->download|basename|urlencode}} 
-
+{% foreach downloads as download %}
+* {{download->name}} ({{download->download|basename}}):
+  http://{{$_SERVER.HTTP_HOST}}/products/download/{{order->id}}/{{download->id}} 
+{% end %}
 {% end %}
 
-Order summary:
+Order Details:
 
-{{product->name}}: ${{product->price|products\Filter::money}} 
-{% foreach taxes as tax, percent %}
-{{tax}}: ${{products\Tax::calculate ($data->product->price, $data->percent)|products\Filter::money}} 
+{% foreach items as product %}
+* {{product->label}} (${{product->price|products\Filter::money}})
+  Quantity: {{product->quantity|products\Filter::padding (%s, 8, 'right')}} 
+  Amount:   ${{product->price * $data->product->quantity|products\Filter::money}} 
 {% end %}
-Total: ${{order->amount|products\Filter::money}} 
 
-Contact info:
+Subtotal: ${{order->subtotal|products\Filter::money}} 
+Shipping: ${{order->shipping|products\Filter::money}} 
+Taxes:
+{% foreach taxes as tax %}
+* {{tax->tax_name}}: ${{tax->tax_amount|products\Filter::money}} 
+{% end %}
+Total: ${{order->total|products\Filter::money}} 
 
-{{order->email}} 
+Contact Info:
 
-{% if order->shipping_name != '' %}
+{{payment->email}} 
+
+{% if payment->shipping_name != '' %}
 Ship to:
-    {{order->shipping_name}} 
-    {{order->shipping_address}} 
-    {{order->shipping_city}}, {{order->shipping_state}} 
-    {{order->shipping_country}} {{order->shipping_zip}}
+    {{payment->shipping_name}} 
+    {{payment->shipping_address}} 
+    {{payment->shipping_city}}, {{payment->shipping_state}} 
+    {{payment->shipping_country}} {{payment->shipping_zip}}
 {% end %}
 
 
-{% if order->billing_name != '' %}
+{% if payment->billing_name != '' %}
 Billed to:
-    {{order->billing_name}} 
-    {{order->billing_address}} 
-    {{order->billing_city}}, {{order->billing_state}} 
-    {{order->billing_country}} {{order->billing_zip}}
+    {{payment->billing_name}} 
+    {{payment->billing_address}} 
+    {{payment->billing_city}}, {{payment->billing_state}} 
+    {{payment->billing_country}} {{payment->billing_zip}}
 {% end %}

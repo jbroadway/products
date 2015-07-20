@@ -90,6 +90,18 @@ if ($order->status === 'pending') {
 	);
 }
 
+// Fetch downloads to add links
+$downloads = products\Product::query ('id, name, download')
+	->where (function ($q) use ($ids) {
+		foreach ($ids as $n => $id) {
+			$tmp = ($n === 0)
+				? $q->where ('id', $id)
+				: $q->or_where ('id', $id);
+		}
+	})
+	->where ('download != ""')
+	->fetch_orig ();
+
 $page->add_style ('/apps/products/css/products.css');
 
 if ($this->params[2] === 'completed' && $send_receipt) {
@@ -111,7 +123,8 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 					'payment' => $pmt->orig (),
 					'order' => $order->orig (),
 					'taxes' => $taxes,
-					'items' => $items
+					'items' => $items,
+					'downloads' => $downloads
 				)
 			)
 		));
@@ -131,7 +144,8 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 						'payment' => $pmt->orig (),
 						'order' => $order->orig (),
 						'taxes' => $taxes,
-						'items' => $items
+						'items' => $items,
+						'downloads' => $downloads
 					)
 				)
 			));
@@ -139,18 +153,6 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 		}
 	}
 }
-
-// Fetch downloads to add links
-$downloads = products\Product::query ('id, name, download')
-	->where (function ($q) use ($ids) {
-		foreach ($ids as $n => $id) {
-			$tmp = ($n === 0)
-				? $q->where ('id', $id)
-				: $q->or_where ('id', $id);
-		}
-	})
-	->where ('download != ""')
-	->fetch_orig ();
 
 echo $tpl->render (
 	'products/order',

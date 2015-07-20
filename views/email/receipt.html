@@ -1,24 +1,34 @@
 Thank you for your order!
 
-Order Number: {{order->id|str_pad (%s, 3, '0', STR_PAD_LEFT)}}-{{product->id}} 
+Order Number: {{order->id}} 
+Order Date:   {{order->ts|I18n::date_time|strip_tags}} 
 
-{% if product->download != '' %}
-Click the following link to download the file "{{product->download|basename}}"
+{% if count ($data->downloads) > 0 %}
+Click the following links to download your digital purchases.
 
-    http://{{$_SERVER.HTTP_HOST}}/products/order/{{order->id}}/{{product->id}}/download/{{product->download|basename|urlencode}} 
-
+{% foreach downloads as download %}
+* {{download->name}} ({{download->download|basename}}):
+  http://{{$_SERVER.HTTP_HOST}}/products/download/{{order->id}}/{{download->id}} 
+{% end %}
 {% end %}
 
-Order summary:
+Order Details:
 
-{{product->name}}: ${{product->price|products\Filter::money}} 
-{% foreach taxes as tax, percent %}
-{{tax}}: ${{products\Tax::calculate ($data->product->price, $data->percent)|products\Filter::money}} 
+{% foreach items as product %}
+* {{product->label}} (${{product->price|products\Filter::money}})
+  Quantity: {{product->quantity|products\Filter::padding (%s, 8, 'right')}} 
+  Amount:   ${{product->price * $data->product->quantity|products\Filter::money}} 
 {% end %}
-Total: ${{order->amount|products\Filter::money}} 
 
-Thanks again for your order, and if you have any questions just
-reply to let us know!
+Subtotal: ${{order->subtotal|products\Filter::money}} 
+Shipping: ${{order->shipping|products\Filter::money}} 
+Taxes:
+{% foreach taxes as tax %}
+* {{tax->tax_name}}: ${{tax->tax_amount|products\Filter::money}} 
+{% end %}
+Total: ${{order->total|products\Filter::money}} 
+
+Thanks again for your order, and if you have any questions just reply to let us know!
 
 Regards,
 
