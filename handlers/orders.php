@@ -15,21 +15,29 @@ products\Order::clear_pending ();
 $limit = 20;
 $num = isset ($_GET['offset']) ? $_GET['offset'] : 1;
 $offset = ($num - 1) * $limit;
+
 $q = isset ($_GET['q']) ? $_GET['q'] : '';
-$q2 = str_replace (array ('user:'), array ('user_id:'), $q);
-$q_fields = array ('id', 'ts', 'status');
-$q_exact = array ('user_id', 'status');
+$q2 = str_replace (array ('user:', 'status:'), array ('o.user_id:', 'o.status:'), $q);
+
+$q_query = 'o.*, u.name';
+$q_from = '#prefix#products_order o, #prefix#user u';
+$q_fields = array ('o.id', 'o.ts', 'o.status', 'u.name', 'u.email');
+$q_exact = array ('o.user_id', 'o.status');
 $url = ! empty ($q)
 	? '/products/orders?q=' . urlencode ($q) . '&offset=%d'
 	: '/products/orders?offset=%d';
 
-$list = products\Order::query ()
+$list = products\Order::query ($q_query)
+	->from ($q_from)
 	->where_search ($q2, $q_fields, $q_exact)
+	->and_where ('o.user_id = u.id')
 	->order ('ts', 'desc')
 	->fetch_orig ($limit, $offset);
 
-$count =products\Order::query ()
+$count =products\Order::query ($q_query)
+	->from ($q_from)
 	->where_search ($q2, $q_fields, $q_exact)
+	->and_where ('o.user_id = u.id')
 	->count ();
 
 $users = User::query ('id, name')
