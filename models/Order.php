@@ -24,6 +24,21 @@ class Order extends \Model {
 	//public $_extended_field = 'items';
 
 	/**
+	 * Clear pending orders that are over 72 hours old, which are
+	 * safe to be considered stagnant and won't be completed. This
+	 * simply means they'll have to check out again from the View
+	 * Cart screen.
+	 */
+	public static function clear_pending () {
+		\DB::execute (
+			'delete from #prefix#products_order
+			 where status = ? and ts < ?',
+			'pending',
+			gmdate ('Y-m-d H:i:s', time () - 259200)
+		);
+	}
+
+	/**
 	 * Returns a list of valid statuses as key/value pairs, or the label
 	 * value for a given status if used as a template filter, e.g.:
 	 *

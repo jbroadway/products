@@ -9,10 +9,14 @@ $this->require_admin ();
 $page->layout = 'admin';
 $page->title = __ ('Orders');
 
+// clear pending orders over 72 hours old
+products\Order::clear_pending ();
+
 $limit = 20;
 $num = isset ($_GET['offset']) ? $_GET['offset'] : 1;
 $offset = ($num - 1) * $limit;
 $q = isset ($_GET['q']) ? $_GET['q'] : '';
+$q2 = str_replace (array ('user:'), array ('user_id:'), $q);
 $q_fields = array ('id', 'ts', 'status');
 $q_exact = array ('user_id', 'status');
 $url = ! empty ($q)
@@ -20,12 +24,12 @@ $url = ! empty ($q)
 	: '/products/orders?offset=%d';
 
 $list = products\Order::query ()
-	->where_search ($q, $q_fields, $q_exact)
+	->where_search ($q2, $q_fields, $q_exact)
 	->order ('ts', 'desc')
 	->fetch_orig ($limit, $offset);
 
 $count =products\Order::query ()
-	->where_search ($q, $q_fields, $q_exact)
+	->where_search ($q2, $q_fields, $q_exact)
 	->count ();
 
 $users = User::query ('id, name')

@@ -52,7 +52,7 @@
 {% foreach list as item %}
 	<tr>
 		<td><a href="/products/orders/details?id={{item->id}}">{"Order"} #{{item->id}}</a></td>
-		<td><a href="#" class="search-for" data-search="user_id:{{item->user_id}}">{{ users[$data->item->user_id] }}</a></td>
+		<td><a href="#" class="search-for" data-search="user:{{item->user_id}}">{{ users[$data->item->user_id] }}</a></td>
 		<td>{{ item->ts|I18n::date_time }}</td>
 		<td><a href="#" class="search-for" data-search="status:{{item->status}}">{{ item->status|products\Order::statuses }}</a></td>
 		<td style="text-align: right">${{ item->subtotal|products\Filter::money}}</td>
