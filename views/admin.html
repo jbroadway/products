@@ -22,7 +22,7 @@
 	</tr>
 {% foreach items %}
 	<tr>
-		<td>{{ loop_value->name }}</td>
+		<td><a href="/products/details/{{loop_value->id}}/{{loop_value->name|URLify::filter}}">{{ loop_value->name }}</a></td>
 		<td>{{ loop_value->category }}</td>
 		<td style="text-align: right">${{ loop_value->price|products\Filter::money }}</td>
 		<td style="text-align: right">{{ loop_value->quantity|products\Filter::quantity }}</td>

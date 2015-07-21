@@ -1,0 +1,13 @@
+Dear {{user_name}},
+
+This is a notice that the status of your order #{{id}} has been changed to {{status|products\Order::statuses}}.
+
+To view this order online, visit the following link:
+
+http://{{$_SERVER.HTTP_HOST}}/products/order/{{payment_id}}/{{id}}/completed
+
+Thanks again for your order, and if you have any questions just reply to let us know!
+
+Regards,
+
+{{ conf('General', 'site_name') }}

@@ -27,7 +27,7 @@ if ($order->error) {
 }
 
 $user_id = User::val ('id');
-if ($order->user_id != $user_id) {
+if (! User::require_admin () && $order->user_id != $user_id) {
 	error_log ('Order belongs to other user (order: ' . $this->params[0] . ', user: ' . $user_id . ')');
 	echo $this->error (
 		404,

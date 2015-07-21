@@ -8,6 +8,8 @@ cart.init ({
 </script>
 {% end %}
 
+<p id="order-status">{"Order Status"}: <strong>{{order->status|products\Order::statuses}}</strong></p>
+
 <p id="order-date">{"Order Date"}: {{order->ts|I18n::date_time}}</p>
 
 <p>

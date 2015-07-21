@@ -1,0 +1,85 @@
+{! admin/util/minimal-grid !}
+
+<p>
+	<a href="/products/orders">&laquo; {"Back"}</a>
+</p>
+
+<div class="e-row-variable e-no-padding" style="margin-bottom: 20px">
+	<div class="e-col-25 e-no-padding">
+<strong>{"Ordered By"}</strong><br />
+<a href="/user/details?id={{user->id}}">{{user->name}}</a><br />
+(<a href="mailto:{{user->email}}">{{user->email}}</a>)
+	</div>
+	<div class="e-col-25 e-no-padding">
+<strong>{"Order Date"}</strong><br />
+{{order->ts|I18n::date_time}}
+	</div>
+	<div class="e-col-25 e-no-padding">
+<strong>{"Order Status"}</strong><br />
+<form method="post" id="{{_form}}">
+	<select name="status">
+	{% foreach statuses as _status, _label %}
+		<?= Form::option ($data->_status, $data->_label, $data->order->status); ?>
+	{% end %}
+	</select><br />
+	<button style="margin-top: 5px">{"Update Status"}</button>
+</form>
+	</div>
+	<div class="e-col-25 e-no-padding">
+<strong>{"Payment Info"}</strong><br />
+<a href="https://manage.stripe.com/payments/{{ payment->stripe_id }}" target="_blank">{"View on Stripe"} &raquo;</a>
+	</div>
+</div>
+
+<table class="order-table" style="width: 100%">
+	<tr>
+		<th style="width: 40%">{"Description"}</th>
+		<th style="width: 20%; text-align: right">{"Price"}</th>
+		<th style="width: 20%; text-align: right">{"Quantity"}</th>
+		<th style="width: 20%; text-align: right">{"Amount"}</th>
+	</tr>
+{% foreach items as product %}
+	<tr>
+		<td><a href="/products/details/{{product->id}}/{{product->label|URLify::filter}}" target="_blank">{{product->label}}</a></th>
+		<td style="text-align: right">${{product->price|products\Filter::money}}</td>
+		<td style="text-align: right">{{product->quantity}}</td>
+		<td style="text-align: right">${{product->price * $data->product->quantity|products\Filter::money}}</td>
+	</tr>
+{% end %}
+	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th style="text-align: right">{"Subtotal"}</th>
+		<th style="text-align: right">${{order->subtotal|products\Filter::money}}</th>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td style="text-align: right">{"Shipping"}</td>
+		<td style="text-align: right">${{order->shipping|products\Filter::money}}</td>
+	</tr>
+{% foreach taxes as tax %}
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td style="text-align: right">{{tax->tax_name}}</td>
+		<td style="text-align: right">${{tax->tax_amount|products\Filter::money}}</td>
+{% end %}
+	<tr>
+		<th>&nbsp;</th>
+		<th>&nbsp;</th>
+		<th style="text-align: right">{"Total"}</th>
+		<th style="text-align: right">${{order->total|products\Filter::money}}</th>
+	</tr>
+</table>
+
+{% if count ($data->downloads) > 0 %}
+<div class="products-downloads">
+<h3>{"Digital downloads"}</h3>
+<ul>
+	{% foreach downloads as download %}
+	<li><a href="/products/download/{{order->id}}/{{download->id}}">{{download->name}} ({{download->download|basename}})</a></li>
+	{% end %}
+</ul>
+</div>
+{% end %}

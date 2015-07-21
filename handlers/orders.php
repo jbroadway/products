@@ -1,12 +1,13 @@
 <?php
 
+/**
+ * Shows the list of orders to the admin.
+ */
+
 $this->require_admin ();
 
 $page->layout = 'admin';
-$page->title = __ ('Product Orders');
-
-$user = isset ($_GET['user']) ? $_GET['user'] : false;
-$status = isset ($_GET['status']) ? $_GET['status'] : false;
+$page->title = __ ('Orders');
 
 $limit = 20;
 $num = isset ($_GET['offset']) ? $_GET['offset'] : 1;
@@ -31,12 +32,7 @@ $users = User::query ('id, name')
 	->order ('name', 'asc')
 	->fetch_assoc ('id', 'name');
 
-$statuses = array (
-	'pending' => __ ('Pending'),
-	'completed' => __ ('Completed'),
-	'shipping' => __ ('Shipping'),
-	'shipped' => __ ('Shipped')
-);
+$statuses = products\Order::statuses ();
 
 echo $tpl->render (
 	'products/orders',
@@ -45,9 +41,7 @@ echo $tpl->render (
 		'total' => $count,
 		'list' => $list,
 		'count' => count ($list),
-		'user' => $user,
 		'users' => $users,
-		'status' => $status,
 		'statuses' => $statuses,
 		'url' => $url,
 		'q' => $q

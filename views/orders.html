@@ -54,7 +54,7 @@
 		<td><a href="/products/orders/details?id={{item->id}}">{"Order"} #{{item->id}}</a></td>
 		<td><a href="#" class="search-for" data-search="user_id:{{item->user_id}}">{{ users[$data->item->user_id] }}</a></td>
 		<td>{{ item->ts|I18n::date_time }}</td>
-		<td>{{ item->status|ucfirst }}</td>
+		<td><a href="#" class="search-for" data-search="status:{{item->status}}">{{ item->status|products\Order::statuses }}</a></td>
 		<td style="text-align: right">${{ item->subtotal|products\Filter::money}}</td>
 		<td style="text-align: right">${{ item->shipping|products\Filter::money}}</td>
 		<td style="text-align: right">${{ item->taxes|products\Filter::money}}</td>

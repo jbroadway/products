@@ -22,4 +22,35 @@ class Order extends \Model {
 	public $table = '#prefix#products_order';
 	
 	//public $_extended_field = 'items';
+
+	/**
+	 * Returns a list of valid statuses as key/value pairs, or the label
+	 * value for a given status if used as a template filter, e.g.:
+	 *
+	 *     {{status|products\Order:statuses}}
+	 */
+	public static function statuses ($status = null) {
+		$statuses = array (
+			'pending' => __ ('Payment Pending'),
+			'completed' => __ ('Payment Completed'),
+			'partial' => __ ('Order Partially Shipped'),
+			'shipped' => __ ('Order Shipped'),
+			'cancelled' => __ ('Order Cancelled'),
+			'refunded' => __ ('Order Refunded')
+		);
+
+		if ($status !== null) {
+			return $statuses[$status];
+		}
+
+		return $statuses;
+	}
+	
+	/**
+	 * Is the given status valid? For input validation.
+	 */
+	public static function status_valid ($status) {
+		$statuses = self::statuses ();
+		return isset ($statuses[$status]);
+	}
 }

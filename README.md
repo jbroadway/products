@@ -1,21 +1,26 @@
 # Products is a simple shopping cart for the Elefant CMS
 
-**Status: Alpha**
-
-The checkout process is still under development. [See here for a stable release.](https://github.com/jbroadway/products/releases/tag/1.0.0)
-
---
+**Status: Beta**
 
 This app provides a simple shopping cart for the Elefant CMS, with sales handled
 through the [Stripe Payments](https://github.com/jbroadway/stripe) app.
 
-#### To do:
+## Current features
 
-* Inventory tracking
-* Update digital downloads
-* Update email receipt templates
-* Create order history view for users
-* Create orders tab in the admin backend
+* Shopping cart
+* Basic inventory tracking
+* Configurable taxes
+* Shipping fees with max amount and "free over $x" settings
+* Digital downloads
+* Stripe payment processing
+* Basic order management
+
+## Features yet to be added
+
+* Admin sales dashboard
+* Inventory running low/out admin notifications
+* Shipment tracking
+* Promo codes
 
 ## Installation
 
