@@ -11,19 +11,21 @@ $status = isset ($_GET['status']) ? $_GET['status'] : false;
 $limit = 20;
 $num = isset ($_GET['offset']) ? $_GET['offset'] : 1;
 $offset = ($num - 1) * $limit;
+$q = isset ($_GET['q']) ? $_GET['q'] : '';
+$q_fields = array ('id', 'ts', 'status');
+$q_exact = array ('user_id', 'status');
+$url = ! empty ($q)
+	? '/products/orders?q=' . urlencode ($q) . '&offset=%d'
+	: '/products/orders?offset=%d';
 
-$q = products\Order::query ();
-if ($user) {
-	$q->where ('user_id', $user);
-}
-if ($status) {
-	$q->where ('status', $status);
-}
+$list = products\Order::query ()
+	->where_search ($q, $q_fields, $q_exact)
+	->order ('ts', 'desc')
+	->fetch_orig ($limit, $offset);
 
-$q->order ('ts', 'desc');
-
-$list = $q->fetch_orig ($limit, $offset);
-$count = $q->count ();
+$count =products\Order::query ()
+	->where_search ($q, $q_fields, $q_exact)
+	->count ();
 
 $users = User::query ('id, name')
 	->order ('name', 'asc')
@@ -47,6 +49,7 @@ echo $tpl->render (
 		'users' => $users,
 		'status' => $status,
 		'statuses' => $statuses,
-		'url' => '/products/orders?user=' . Template::sanitize ($user) . '&status=' . Template::sanitize ($status) . '&offset=%d'
+		'url' => $url,
+		'q' => $q
 	)
 );

@@ -1,74 +1,83 @@
 {! admin/util/minimal-grid !}
-
-<p>
-	<a href="/products/admin">&laquo; {"Back"}</a>
-</p>
+{! admin/util/search !}
 
 {% if total === 0 %}
 <p>{"There are no orders yet."}</p>
 {% else %}
 
-<form method="get">
-<div class="e-row-variable e-no-padding">
-	<div class="e-col-33 e-no-padding">
-{! navigation/pager?style=results&url=[url]&total=[total]&count=[count]&limit=[limit] !}
+<form method="get" id="search-form">
+
+<div class="e-row-variable e-no-padding" style="margin-bottom: 20px">
+	<div class="e-col-50 e-no-padding">
+		<a href="/products/admin">&laquo; {"Back"}</a>
 	</div>
-	<div class="e-col-33 e-no-padding" style="text-align: center">
-	{"Status"}:
-	<select name="status" onchange="this.form.submit ()">
-		<option value="">{"- select -"}</option>
-{% foreach statuses as _status, _label %}
-		<option value="{{_status}}"{% if status == $data->_status %} selected{% end %}>{{_label}}</option>
-{% end %}
-	</select>
-{% if user %}
-	&nbsp;
-	<a href="/products/orders?user={{user}}">{"Clear"}</a>
-{% end %}
-	</div>
-	<div class="e-col-33 e-no-padding" style="text-align: right">
-	{"Account"}:
-	<select name="user" onchange="this.form.submit ()">
-		<option value="">{"- select -"}</option>
-{% foreach users as user_id, user_name %}
-		<option value="{{user_id}}"{% if user == $data->user_id %} selected{% end %}>{{user_name}}</option>
-{% end %}
-	</select>
-{% if user %}
-	&nbsp;
-	<a href="/products/orders?status={{status}}">{"Clear"}</a>
-{% end %}
+	<div class="e-col-50 e-no-padding" style="text-align: right">
+	<input type="text" name="q" id="search-query" size="40" value="{{q}}" />
+	<button>{"Search"}</button>
+	{% if q != '' %}
+	<button onclick="window.location.href = '/products/orders'; return false">{"Clear"}</button>
+	{% end %}
 	</div>
 </div>
-</form>
 
-<p>
+<div class="e-row-variable">
+	<div class="e-col-50 e-no-padding">
+		{! navigation/pager?style=results&url=[url]&total=[total]&count=[count]&limit=[limit] !}
+	</div>
+	<div class="e-col-50 e-no-padding" style="text-align: right">
+		{% if total > $data->limit %}
+		{! navigation/pager?style=numbers&url=[url]&total=[total]&count=[count]&limit=[limit] !}
+		{% end %}
+	</div>
+</div>
+
 <table width="100%">
 	<tr>
-		<th width="10%">{"Order #"}</th>
-		<th width="19%">{"Account"}</th>
-		<th width="19%">{"Date/Time"}</th>
-		<th width="19%">{"Status"}</th>
-		<th width="19%" style="text-align: right">{"Total"}</th>
-		<th width="14%">&nbsp;</th>
+		<th width="10%">{"Order"}</th>
+		<th width="20%">{"Account"}</th>
+		<th width="20%">{"Date/Time"}</th>
+		<th width="10%">
+			<select class="search-option" data-prefix="status">
+				<option value="">{"Status"}</option>
+				{% foreach statuses as _status, _label %}
+				<option value="{{_status}}">{{_label}}</option>
+				{% end %}
+			</select>
+		</th>
+		<th width="10%" style="text-align: right">{"Subtotal"}</th>
+		<th width="10%" style="text-align: right">{"Shipping"}</th>
+		<th width="10%" style="text-align: right">{"Taxes"}</th>
+		<th width="10%" style="text-align: right">{"Total"}</th>
 	</tr>
 {% foreach list as item %}
 	<tr>
-		<td><a href="/products/orders/details?id={{item->id}}">#{{item->id}}</a></td>
-		<td>{{ users[$data->item->user_id] }}</td>
+		<td><a href="/products/orders/details?id={{item->id}}">{"Order"} #{{item->id}}</a></td>
+		<td><a href="#" class="search-for" data-search="user_id:{{item->user_id}}">{{ users[$data->item->user_id] }}</a></td>
 		<td>{{ item->ts|I18n::date_time }}</td>
 		<td>{{ item->status|ucfirst }}</td>
+		<td style="text-align: right">${{ item->subtotal|products\Filter::money}}</td>
+		<td style="text-align: right">${{ item->shipping|products\Filter::money}}</td>
+		<td style="text-align: right">${{ item->taxes|products\Filter::money}}</td>
 		<td style="text-align: right">${{ item->total|products\Filter::money}}</td>
-		<td style="text-align: right">
-		</td>
 	</tr>
 {% end %}
 </table>
-</p>
+
+</form>
 
 {% if total > $data->limit %}
 {! navigation/pager?style=numbers&url=[url]&total=[total]&count=[count]&limit=[limit] !}
 {% end %}
 
+<script>
+$(function () {
+	$.search_init ({
+		form: '#search-form',
+		query: '#search-query',
+		links: '.search-for',
+		options: '.search-option'
+	});
+});
+</script>
 
 {% end %}
