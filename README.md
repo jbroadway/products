@@ -14,6 +14,7 @@ through the [Stripe Payments](https://github.com/jbroadway/stripe) app.
 * Digital downloads
 * Stripe payment processing
 * Basic order management
+* Discounts and "invoice me" payment option [available via callbacks](#callbacks)
 
 ## Features yet to be added
 
@@ -56,3 +57,50 @@ to set up your taxes and product categories.
 In the Elefant admin area, go to Tools > Navigation and drag the "Products" page into
 your site tree. Note that if you've renamed the page in the Products app settings, the
 page will be renamed in the site navigation as well.
+
+### Callbacks for discounts and "invoice me" payment option
+
+The following settings can be set in your `conf/app.products.config.php` configuration
+file like this:
+
+```ini
+; A callback to check for available discounts for the current user's
+; membership type, specified as a percentage discount.
+discount_callback = "\myapp\Callbacks::discount"
+
+; A callback to check whether an "invoice me" option should be available
+; for payments. The site owner will receive an email of the order that
+; they will manually invoice for.
+allow_invoice_callback = "\myapp\Callbacks::allow_invoice"
+```
+
+Here is an example class that implements basic examples of callbacks for the two settings:
+
+```php
+<?php // apps/myapp/lib/Callbacks.php
+
+namespace myapp;
+
+use User;
+
+class Callbacks {
+	/**
+	 * If user is logged in, allow invoice.
+	 */
+	public static function allow_invoice () {
+		return User::is_valid ();
+	}
+	
+	/**
+	 * Give everyone 10% off.
+	 */
+	public static function discount () {
+		return User::is_valid () ? 10 : 0;
+	}
+}
+
+```
+
+In the above example, it allows all users who are logged in to request an invoice,
+and also gives them 10% off. From here, you can fill in any logic around different
+member types that works for your site's needs.
