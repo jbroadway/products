@@ -128,8 +128,7 @@ $downloads = products\Product::query ('id, name, download')
 
 $page->add_style ('/apps/products/css/products.css');
 
-if ($this->params[2] === 'completed' && $send_receipt) {
-	$page->title .= ' ' . __ ('Confirmed');
+if ($send_receipt) {
 	$page->add_script ('/js/json2.js');
 	$page->add_script ('/js/jstorage.js');
 	$page->add_script ('/apps/products/js/handlebars-v3.0.1.js');
@@ -137,6 +136,8 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 	$page->add_script ('/apps/products/js/cart.js');
 
 	if ($this->params[2] === 'invoice') {
+		$page->title .= ' ' . __ ('Received');
+
 		// send email receipt
 		try {
 			Mailer::send (array (
@@ -177,7 +178,10 @@ if ($this->params[2] === 'completed' && $send_receipt) {
 			} catch (Exception $e) {
 			}
 		}
-	} else {
+
+	} elseif ($this->params[2] === 'completed') {
+		$page->title .= ' ' . __ ('Confirmed');
+
 		// send email receipt
 		try {
 			Mailer::send (array (

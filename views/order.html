@@ -1,11 +1,15 @@
 {% if clear_cart %}
-<p id="order-confirmed"><strong>{"Your order has been confirmed."}</strong></p>
+	{% if invoice %}
+		<p id="order-confirmed"><strong>{"Your order has been received."}</strong></p>
+	{% else %}
+		<p id="order-confirmed"><strong>{"Your order has been confirmed."}</strong></p>
+	{% end %}
 
-<script>
-cart.init ({
-	clear: true
-});
-</script>
+	<script>
+	cart.init ({
+		clear: true
+	});
+	</script>
 {% end %}
 
 <p id="order-status">{"Order Status"}: <strong>{{order->status|products\Order::statuses}}</strong></p>
