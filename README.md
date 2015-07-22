@@ -14,7 +14,7 @@ through the [Stripe Payments](https://github.com/jbroadway/stripe) app.
 * Digital downloads
 * Stripe payment processing
 * Basic order management
-* Discounts and "invoice me" payment option [available via callbacks](#callbacks)
+* Discounts and "invoice me" payment option [available via callbacks](#callbacks-for-discounts-and-invoice-me-payment-option)
 
 ## Features yet to be added
 
