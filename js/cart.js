@@ -19,6 +19,7 @@ var cart = (function ($, Handlebars, accounting) {
 			currency_symbol: '$',
 			prefix: '/products/api/',
 			taxes: [],
+			allow_invoice: false,
 			max_shipping: false,
 			shipping_free_over: false,
 			button_add: undefined,
@@ -361,6 +362,15 @@ var cart = (function ($, Handlebars, accounting) {
 	};
 	
 	/**
+	 * User has requested to pay by invoice.
+	 */
+	self.invoice_me = function (e) {
+		e.preventDefault ();
+		
+		location.href = '/products/order/' + opts.order_id + '/invoice';
+	};
+	
+	/**
 	 * Empty the cart of its contents.
 	 */
 	self.clear_cart = function () {
@@ -447,6 +457,10 @@ var cart = (function ($, Handlebars, accounting) {
 		
 		if (opts.show_checkout !== undefined) {
 			$.get (opts.prefix + 'checkout_info', {items: self.item_ids ()}, self.checkout);
+		}
+		
+		if (opts.allow_invoice !== false) {
+			$(opts.allow_invoice).on ('click', self.invoice_me);
 		}
 	};
 	

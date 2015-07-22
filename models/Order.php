@@ -47,6 +47,7 @@ class Order extends \Model {
 	public static function statuses ($status = null) {
 		$statuses = array (
 			'pending' => __ ('Payment Pending'),
+			'invoice' => __ ('Invoice for Payment'),
 			'completed' => __ ('Payment Completed'),
 			'partial' => __ ('Order Partially Shipped'),
 			'shipped' => __ ('Order Shipped'),

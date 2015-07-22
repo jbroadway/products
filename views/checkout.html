@@ -41,10 +41,18 @@
 	&address=Yes
 !}</p>
 
+{% if allow_invoice %}
+<p><a href="#" id="invoice-me">{"Request an invoice to pay offline."}</a></p>
+{% end %}
+
 <script>
 cart.init ({
 	show_checkout: '#checkout-summary',
 	tpl_checkout: '#tpl-checkout',
+{% if allow_invoice %}
+	allow_invoice: '#invoice-me',
+	order_id: {{order->id}},
+{% end %}
 	taxes: {{taxes|json_encode}},
 	max_shipping: {{max_shipping}},
 	shipping_free_over: {{shipping_free_over}}

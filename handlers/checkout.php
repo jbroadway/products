@@ -94,5 +94,6 @@ echo $tpl->render ('products/checkout', array (
 	'shipping_free_over' => Appconf::products ('Products', 'shipping_free_over'),
 	'order' => $o,
 	'payment_description' => 'Order #' . $o->id,
-	'total' => $o->total
+	'total' => $o->total,
+	'allow_invoice' => products\App::allow_invoice ()
 ));

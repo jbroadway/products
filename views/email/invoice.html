@@ -1,17 +1,10 @@
-Dear {{User::val ('name')}},
-
-Thank you for your order!
-
-{% if invoice %}
-An invoice has been requested for the following order:
-
-{% end %}
+{{user->name}} ({{user->email}}){% if user->company != '' %} from {{user->company}}{% end %} has requested to be invoiced for order #:
 
 Order Number: {{order->id}} 
 Order Date:   {{order->ts|I18n::date_time|strip_tags}} 
 
 {% if count ($data->downloads) > 0 %}
-Click the following links to download your digital purchases.
+Digital Downloads:
 
 {% foreach downloads as download %}
 * {{download->name}} ({{download->download|basename}}):
@@ -37,8 +30,5 @@ Taxes:
 {% end %}
 Total:      ${{order->total|products\Filter::money}} 
 
-Thanks again for your order, and if you have any questions just reply to let us know!
-
-Regards,
-
-{{ conf('General', 'site_name') }}
+Sincerely,
+{{conf ('General', 'site_name')}} 
