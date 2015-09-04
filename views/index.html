@@ -20,7 +20,7 @@
 					<a href="/products/details/{{ product->id }}/{{ product->name|URLify::filter }}">
 						<div class="products-thumbnail"
 							{% if product->photo != '' %}
-								style="background-image: url('/{{product->photo|Image::resize (%s, 400, 300, 'cover', 'ext')}}')"
+								style="background-image: url('/{{product->photo|Image::resize (%s, 400, 264, 'cover', 'ext')}}')"
 							{% else %}
 								style="background-image: url(/apps/products/css/default.jpg)"
 							{% end %}

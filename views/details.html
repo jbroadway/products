@@ -9,7 +9,7 @@
 		<div class="products-thumbnail-wrapper">
 			<div class="products-thumbnail"
 				{% if photo != '' %}
-					style="background-image: url('/{{photo|Image::resize (%s, 600, 450, 'cover', 'ext')}}')"
+					style="background-image: url('/{{photo|Image::resize (%s, 600, 396, 'cover', 'ext')}}')"
 				{% else %}
 					style="background-image: url(/apps/products/css/default.jpg)"
 				{% end %}
